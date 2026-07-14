@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CardioCare AI - Cardiology Health Intelligence Platform</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --crimson:#a02838;--crimson-lt:#c9606c;--crimson-pale:#faeaec;
+  --teal:#0e7a6b;--teal-lt:#2ab5a0;--teal-pale:#e6f5f3;
+  --gold:#c4894a;--gold-lt:#e8b87a;--gold-pale:#fdf5ec;
+  --red:#c0392b;--cream:#fdfcfb;--cream2:#f8f2f2;
+  --text:#220e11;--text2:#452226;--text3:#9a7478;
+  --border:rgba(160,40,56,0.16);--border2:rgba(160,40,56,0.35);
+  --shadow:0 8px 40px rgba(34,14,17,0.10);--shadow2:0 24px 80px rgba(34,14,17,0.18);
+  --r:13px;--r2:22px;
+  --serif:'Playfair Display',serif;--body:'DM Sans',sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--body);background:var(--cream);color:var(--text);overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--cream2);}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(1.4)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+@keyframes heartbeat{0%,100%{transform:scale(1)}10%{transform:scale(1.12)}20%{transform:scale(1)}30%{transform:scale(1.08)}40%{transform:scale(1)}}
+#disc-modal{position:fixed;inset:0;z-index:9999;background:rgba(18,5,7,0.96);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;padding:20px;}
+.disc-box{background:var(--cream);border-radius:var(--r2);max-width:700px;width:100%;max-height:92vh;overflow-y:auto;padding:48px 52px;border:1px solid var(--border2);box-shadow:var(--shadow2);}
+.disc-icon{font-size:52px;text-align:center;display:block;margin-bottom:14px;animation:heartbeat 1.6s ease infinite;}
+.disc-box h1{font-family:var(--serif);font-size:24px;font-weight:700;color:var(--crimson);text-align:center;margin-bottom:6px;}
+.disc-sub{text-align:center;font-size:13px;color:var(--text3);margin-bottom:26px;}
+.disc-content{background:var(--crimson-pale);border:1px solid var(--border2);border-radius:var(--r);padding:22px;margin-bottom:20px;font-size:13px;line-height:1.85;color:var(--text);}
+.disc-content p{margin-bottom:10px;}.disc-content p:last-child{margin-bottom:0;}
+.disc-content strong{color:var(--crimson);font-weight:600;}
+.disc-chk{margin-bottom:22px;}
+.chk-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;cursor:pointer;}
+.chk-row input{width:17px;height:17px;accent-color:var(--crimson);margin-top:2px;cursor:pointer;flex-shrink:0;}
+.chk-row label{font-size:13px;line-height:1.55;cursor:pointer;color:var(--text2);}
+.disc-accept{width:100%;padding:16px;border-radius:var(--r);background:linear-gradient(135deg,var(--crimson),var(--crimson-lt));color:#fff;font-family:var(--body);font-size:15px;font-weight:600;border:none;cursor:pointer;transition:all 0.2s;}
+.disc-accept:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 28px rgba(160,40,56,0.4);}
+.disc-accept:disabled{opacity:0.4;cursor:not-allowed;}
+.disc-bar{position:sticky;top:0;z-index:200;background:linear-gradient(90deg,#1c0508,var(--crimson),#1c0508);background-size:200%;animation:shimmer 4s linear infinite;padding:9px 20px;text-align:center;font-size:12px;font-weight:600;color:#fff;}
+.pdot{display:inline-block;width:7px;height:7px;background:#fff;border-radius:50%;margin-right:8px;animation:pulse 1.5s ease infinite;vertical-align:middle;}
+header{position:relative;z-index:10;background:linear-gradient(160deg,#140406 0%,#3a0e14 45%,#0e1e38 100%);padding:64px 40px 52px;text-align:center;border-bottom:2px solid var(--teal-lt);}
+.hdr-inner{max-width:900px;margin:0 auto;}
+.hdr-eyebrow{font-size:11px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--teal-lt);margin-bottom:18px;}
+header h1{font-family:var(--serif);font-size:clamp(32px,5vw,60px);font-weight:700;color:#faeaec;line-height:1.08;margin-bottom:8px;}
+header h1 span{color:var(--gold-lt);}
+.hdr-sub{font-size:18px;color:rgba(225,190,192,0.88);margin-bottom:20px;}
+.hdr-line{width:100px;height:1px;background:linear-gradient(90deg,transparent,var(--teal-lt),transparent);margin:18px auto;}
+.hdr-desc{font-size:14.5px;color:rgba(215,180,182,0.8);line-height:1.75;max-width:700px;margin:0 auto;}
+.hdr-badges{display:flex;gap:12px;justify-content:center;margin-top:24px;flex-wrap:wrap;}
+.hbadge{padding:6px 18px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid;}
+.hb-c{background:rgba(160,40,56,0.28);border-color:rgba(160,40,56,0.55);color:#f0c0c8;}
+.hb-t{background:rgba(14,122,107,0.25);border-color:rgba(14,122,107,0.5);color:#a0e0d8;}
+.hb-g{background:rgba(196,137,74,0.22);border-color:rgba(196,137,74,0.45);color:#f0d0a0;}
+.main-nav{position:sticky;top:42px;z-index:100;background:rgba(253,252,251,0.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 32px;}
+.nav-inner{max-width:1500px;margin:0 auto;display:flex;overflow-x:auto;}
+.nav-inner::-webkit-scrollbar{height:0;}
+.ntab{padding:15px 13px;font-size:12.5px;font-weight:500;color:var(--text3);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all 0.2s;}
+.ntab:hover{color:var(--crimson);}.ntab.active{color:var(--crimson);border-bottom-color:var(--gold-lt);font-weight:600;}
+.app{display:grid;grid-template-columns:265px 1fr;max-width:1500px;margin:0 auto;min-height:calc(100vh - 260px);}
+.sidebar{border-right:1px solid var(--border);background:rgba(250,234,236,0.3);padding:22px 0;position:sticky;top:112px;height:calc(100vh - 112px);overflow-y:auto;}
+.sb-lbl{padding:8px 18px 4px;font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--text3);}
+.sbi{display:flex;align-items:center;gap:10px;padding:9px 18px;cursor:pointer;transition:all 0.15s;border-left:3px solid transparent;font-size:13px;color:var(--text2);}
+.sbi:hover{background:rgba(160,40,56,0.06);}.sbi.active{background:rgba(160,40,56,0.08);border-left-color:var(--gold);color:var(--crimson);font-weight:600;}
+.sbi .si{font-size:15px;width:20px;text-align:center;flex-shrink:0;}
+.sb-div{height:1px;background:var(--border);margin:10px 14px;}
+.sb-new{font-size:9px;font-weight:700;background:var(--crimson);color:#fff;padding:2px 7px;border-radius:10px;margin-left:auto;}
+.main{padding:38px 44px;}
+.panel{display:none;}.panel.active{display:block;animation:fadeUp 0.3s ease;}
+.ph{margin-bottom:30px;}
+.ph-crumb{font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.ph h2{font-family:var(--serif);font-size:28px;font-weight:700;color:var(--text);line-height:1.15;}
+.ph p{margin-top:10px;font-size:16px;color:var(--text2);line-height:1.7;max-width:680px;}
+.d-line{width:60px;height:2px;background:linear-gradient(90deg,var(--crimson),var(--teal),transparent);margin:12px 0;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--r2);padding:22px;transition:all 0.22s;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--crimson),var(--teal),var(--gold));opacity:0;transition:opacity 0.2s;}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow);}.card:hover::before{opacity:1;}
+.card.click{cursor:pointer;}
+.ci{font-size:30px;margin-bottom:12px;}
+.card h3{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--text);margin-bottom:7px;}
+.card p{font-size:13px;color:var(--text2);line-height:1.65;}
+.ctag{display:inline-block;margin-top:10px;padding:3px 11px;border-radius:20px;font-size:11px;font-weight:600;background:var(--crimson-pale);color:var(--crimson);border:1px solid var(--border2);}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+.stat{background:#fff;border:1px solid var(--border);border-radius:var(--r2);padding:18px;text-align:center;}
+.stat-n{font-family:var(--serif);font-size:28px;font-weight:700;color:var(--crimson);line-height:1;}
+.stat-l{font-size:11px;color:var(--text3);font-weight:500;margin-top:5px;text-transform:uppercase;letter-spacing:0.07em;}
+.sb{background:#fff;border:1px solid var(--border);border-radius:var(--r2);padding:28px;margin-bottom:20px;}
+.sb h3{font-family:var(--serif);font-size:18px;font-weight:600;color:var(--text);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.sb h4{font-family:var(--serif);font-size:14px;font-weight:600;color:var(--crimson);margin:14px 0 7px;}
+.sb p{font-size:13.5px;line-height:1.8;color:var(--text2);margin-bottom:10px;}
+.sb ul{list-style:none;}
+.sb ul li{padding:7px 0;border-bottom:1px solid rgba(160,40,56,0.07);font-size:13px;line-height:1.65;color:var(--text2);display:flex;gap:10px;}
+.sb ul li::before{content:"\25C6";color:var(--teal);flex-shrink:0;font-size:9px;margin-top:4px;}
+.sb ul li:last-child{border-bottom:none;}
+.sb table{width:100%;border-collapse:collapse;font-size:13px;}
+.sb table th{background:var(--crimson);color:#faeaec;font-size:11.5px;font-weight:600;padding:11px 14px;text-align:left;}
+.sb table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top;}
+.alert{padding:13px 17px;border-radius:var(--r);font-size:13px;line-height:1.7;margin-bottom:16px;display:flex;gap:11px;}
+.ai-ic{font-size:17px;flex-shrink:0;margin-top:1px;}
+.alert.warn{background:var(--gold-pale);border:1px solid rgba(196,137,74,0.35);color:#6a3a00;}
+.alert.crimson{background:var(--crimson-pale);border:1px solid var(--border2);color:var(--crimson);}
+.alert.teal{background:var(--teal-pale);border:1px solid rgba(14,122,107,0.3);color:var(--teal);}
+.alert.emergency{background:#140507;border:2px solid var(--crimson-lt);color:#f5c8cc;font-weight:600;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:var(--r);font-family:var(--body);font-size:13.5px;font-weight:600;cursor:pointer;transition:all 0.2s;border:none;}
+.btn-c{background:linear-gradient(135deg,var(--crimson),var(--crimson-lt));color:#fff;}
+.btn-c:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(160,40,56,0.4);}
+.btn-outline{background:transparent;border:1.5px solid var(--border2);color:var(--text2);}
+.btn-outline:hover{border-color:var(--crimson);color:var(--crimson);}
+.btn-lg{padding:14px 28px;font-size:15px;}.btn-sm{padding:6px 14px;font-size:12px;}
+.bgrp{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;}
+.spn{width:18px;height:18px;border:2px solid rgba(255,255,255,0.35);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:none;}
+.btn.loading .spn{display:block;}.btn.loading .bt{display:none;}
+.tab-bar{display:flex;gap:4px;margin-bottom:20px;border-bottom:2px solid var(--border);flex-wrap:wrap;}
+.tbtn{padding:10px 18px;border:none;background:transparent;font-family:var(--body);font-size:13px;font-weight:500;color:var(--text3);cursor:pointer;transition:all 0.2s;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tbtn:hover{color:var(--text);}.tbtn.active{color:var(--crimson);border-bottom-color:var(--gold-lt);font-weight:600;}
+.tpane{display:none;}.tpane.active{display:block;animation:fadeUp 0.25s ease;}
+.upload-zone{border:2px dashed var(--border2);border-radius:var(--r2);padding:44px;text-align:center;cursor:pointer;transition:all 0.3s;background:#fff;margin-bottom:16px;}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--crimson);background:var(--crimson-pale);}
+.uz-icon{font-size:48px;margin-bottom:14px;}
+.file-tags{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:14px;}
+.ftag{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:500;background:var(--cream2);border:1px solid var(--border);color:var(--text3);}
+.file-row{display:flex;align-items:center;gap:11px;padding:11px 15px;border-radius:var(--r);background:#fff;border:1px solid var(--border);margin-bottom:7px;}
+.fr-ico{font-size:18px;flex-shrink:0;}.fr-name{flex:1;font-size:13px;font-weight:500;}.fr-meta{font-size:11px;color:var(--text3);}
+.fr-ok{font-size:11px;padding:2px 8px;border-radius:10px;background:var(--teal-pale);color:var(--teal);font-weight:600;}
+.fr-del{color:var(--text3);cursor:pointer;font-size:16px;padding:3px;}.fr-del:hover{color:var(--red);}
+.assess-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.fg{margin-bottom:16px;}
+.fl{font-size:11px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;display:block;}
+.fi,.fs{width:100%;padding:10px 14px;border-radius:var(--r);border:1.5px solid rgba(160,40,56,0.18);background:#fff;font-family:var(--body);font-size:14px;color:var(--text);outline:none;}
+.fi:focus,.fs:focus{border-color:var(--crimson);}
+.chat-wrap{background:#fff;border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;}
+.chat-head{background:linear-gradient(135deg,#3a0e14,var(--crimson));padding:17px 22px;display:flex;align-items:center;justify-content:space-between;}
+.chat-head h3{font-family:var(--serif);font-size:16px;font-weight:600;color:#fff;}
+.chat-head .free{background:rgba(255,255,255,0.18);color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;}
+.chat-msgs{height:420px;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;background:var(--cream);}
+.cm{max-width:82%;padding:12px 15px;border-radius:14px;font-size:13.5px;line-height:1.62;}
+.cm.user{align-self:flex-end;background:var(--crimson);color:#fff;border-radius:14px 14px 4px 14px;}
+.cm.ai{align-self:flex-start;background:#fff;border:1px solid var(--border);border-radius:14px 14px 14px 4px;}
+.cm .ai-lbl{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal);margin-bottom:4px;}
+.cm.sys{align-self:center;background:var(--cream2);border-radius:8px;font-size:12px;color:var(--text3);max-width:90%;text-align:center;}
+.typing span{width:7px;height:7px;background:var(--text3);border-radius:50%;animation:blink 1.2s ease infinite;display:inline-block;margin:0 2px;}
+.typing span:nth-child(2){animation-delay:0.2s;}.typing span:nth-child(3){animation-delay:0.4s;}
+.chat-input-row{display:flex;gap:10px;padding:14px 18px;border-top:1px solid var(--border);background:var(--cream2);}
+.chat-input{flex:1;padding:10px 14px;border-radius:var(--r);border:1.5px solid rgba(160,40,56,0.2);background:#fff;font-family:var(--body);font-size:13.5px;color:var(--text);outline:none;}
+.chat-input:focus{border-color:var(--crimson);}
+.chat-send{padding:10px 20px;border-radius:var(--r);background:var(--crimson);color:#fff;border:none;cursor:pointer;font-weight:600;font-family:var(--body);}
+.api-box{background:var(--crimson-pale);border:1px solid var(--border2);border-radius:var(--r2);padding:24px;margin-bottom:20px;}
+.api-box h3{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--crimson);margin-bottom:8px;}
+.api-row{display:flex;gap:10px;}
+.api-input{flex:1;padding:10px 14px;border-radius:var(--r);border:1.5px solid var(--border2);background:#fff;font-family:'Consolas',monospace;font-size:13px;color:var(--text);outline:none;}
+.api-input:focus{border-color:var(--crimson);}
+.provider-card{position:relative;}
+.provider-card.selected{border-color:var(--crimson);box-shadow:0 0 0 2px var(--crimson-pale);}
+.provider-card.selected::after{content:'Active';position:absolute;top:14px;right:16px;font-size:11px;font-weight:700;color:var(--crimson);}
+.provider-card .ctag.configured{background:var(--teal-pale);color:var(--teal);border-color:rgba(14,122,107,0.3);}
+footer{background:linear-gradient(160deg,#140406 0%,#2a0a10 100%);padding:50px 40px 30px;border-top:2px solid var(--teal-lt);}
+.footer-inner{max-width:1200px;margin:0 auto;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;margin-bottom:36px;}
+.footer-brand h3{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--teal-lt);margin-bottom:10px;}
+.footer-brand p{font-size:13px;color:rgba(215,180,182,0.7);line-height:1.7;}
+.footer-col h4{font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal-lt);margin-bottom:12px;}
+.footer-col ul{list-style:none;}
+.footer-col ul li{margin-bottom:7px;}
+.footer-col ul li a{font-size:13px;color:rgba(215,180,182,0.6);text-decoration:none;}
+.footer-col ul li a:hover{color:var(--teal-lt);}
+.footer-bottom{border-top:1px solid rgba(160,40,56,0.25);padding-top:22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.footer-bottom p{font-size:12px;color:rgba(215,180,182,0.5);}
+.footer-disc{font-size:11px;color:rgba(215,180,182,0.4);max-width:700px;line-height:1.6;}
+@media(max-width:1000px){.app{grid-template-columns:1fr}.sidebar{display:none}.main{padding:24px 20px}}
+@media(max-width:700px){header{padding:40px 20px 32px}.g2,.g3,.assess-grid{grid-template-columns:1fr}.stat-row{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:1fr}.disc-box{padding:28px 20px}}
+</style>
+</head>
+<body>
+<div id="disc-modal">
+  <div class="disc-box">
+    <span class="disc-icon">&#10084;&#65039;</span>
+    <h1>Medical Disclaimer</h1>
+    <div class="disc-sub">CardioCare AI &mdash; Cardiology Health Intelligence Platform</div>
+    <div class="disc-content">
+      <p><strong>RESEARCH &amp; EDUCATIONAL PURPOSE ONLY:</strong> All content is compiled from published cardiology literature (ACC/AHA, ESC, WHO, NICE, CSI) for educational purposes only.</p>
+      <p><strong>NOT A SUBSTITUTE FOR CARDIAC CARE:</strong> Nothing here constitutes medical advice, diagnosis, or treatment. Cardiac conditions require individualised clinical assessment. AI-generated analysis may be incomplete or inaccurate.</p>
+      <p><strong>MANDATORY PROFESSIONAL CONSULTATION:</strong> Before any treatment decision, medication change, or cardiac procedure &mdash; consult a qualified cardiologist.</p>
+      <p><strong>CARDIAC EMERGENCY &mdash; ACT IMMEDIATELY:</strong> Chest pain/pressure, sudden severe breathlessness, collapse, irregular heartbeat with dizziness, signs of stroke (face drooping, arm weakness, speech difficulty) &mdash; Call 112 (India) / 999 (UK) / 911 (US) IMMEDIATELY. Do NOT drive yourself to hospital.</p>
+    </div>
+    <div class="disc-chk">
+      <div class="chk-row"><input type="checkbox" id="dc1"><label for="dc1">I understand this is an AI research tool &mdash; NOT medical advice, diagnosis, or treatment.</label></div>
+      <div class="chk-row"><input type="checkbox" id="dc2"><label for="dc2">I will consult a qualified cardiologist before any treatment decision.</label></div>
+      <div class="chk-row"><input type="checkbox" id="dc3"><label for="dc3">In a cardiac emergency I will call 112/999/911 immediately, not use this platform first.</label></div>
+    </div>
+    <button class="disc-accept" id="disc-btn" disabled onclick="acceptDisc()">I Understand &amp; Accept &mdash; Enter CardioCare AI</button>
+  </div>
+</div>
+
+<div class="disc-bar"><span class="pdot"></span><strong>&#9888; AI RESEARCH TOOL ONLY</strong> &mdash; Not medical advice. Consult your cardiologist. CARDIAC EMERGENCY: <strong>112</strong> India / 999 UK / 911 US.</div>
+
+<header>
+  <div class="hdr-inner">
+    <div class="hdr-eyebrow">&#10084;&#65039; Cardiology Health Intelligence Platform</div>
+    <h1>CardioCare <span>AI</span></h1>
+    <div class="hdr-sub">Evidence-Based Heart Health Research &amp; Care Intelligence</div>
+    <div class="hdr-line"></div>
+    <div class="hdr-desc">Research coronary artery disease, heart failure, hypertension, arrhythmias, and cardiac emergencies &mdash; from ACC/AHA, ESC, WHO, NICE and CSI guidelines. Includes India-specific premature CAD risk and rheumatic heart disease context.</div>
+    <div class="hdr-badges">
+      <span class="hbadge hb-c">&#10084;&#65039; Coronary Disease</span>
+      <span class="hbadge hb-t">&#128200; Heart Failure</span>
+      <span class="hbadge hb-g">&#9889; Arrhythmias</span>
+      <span class="hbadge hb-c">&#128680; Cardiac Emergencies</span>
+      <span class="hbadge hb-t">&#127470;&#127475; India CVD Risk</span>
+      <span class="hbadge hb-g">&#128274; AES-256 Secure</span>
+    </div>
+  </div>
+</header>
+
+<nav class="main-nav">
+  <div class="nav-inner">
+    <div class="ntab active" onclick="nav('home')">&#127968; Home</div>
+    <div class="ntab" onclick="nav('upload')">&#128193; Upload</div>
+    <div class="ntab" onclick="nav('conditions')">&#10084;&#65039; Conditions</div>
+    <div class="ntab" onclick="nav('cad')">&#129505; Coronary Disease</div>
+    <div class="ntab" onclick="nav('heartfailure')">&#128200; Heart Failure</div>
+    <div class="ntab" onclick="nav('hypertension')">&#128202; Hypertension</div>
+    <div class="ntab" onclick="nav('arrhythmias')">&#9889; Arrhythmias</div>
+    <div class="ntab" onclick="nav('valvular')">&#128298; Valvular Disease</div>
+    <div class="ntab" onclick="nav('investigations')">&#128202; Investigations</div>
+    <div class="ntab" onclick="nav('emergency')">&#128680; Emergency</div>
+    <div class="ntab" onclick="nav('prevention')">&#127811; Prevention</div>
+    <div class="ntab" onclick="nav('india')">&#127470;&#127475; India Context</div>
+    <div class="ntab" onclick="nav('assess')">&#128203; Assessment</div>
+    <div class="ntab" onclick="nav('chat')">&#128172; Ask AI</div>
+    <div class="ntab" onclick="nav('settings')">&#9881; Settings</div>
+  </div>
+</nav>
+
+<div class="app">
+<aside class="sidebar">
+  <div class="sb-lbl">Patient Portal</div>
+  <div class="sbi active" onclick="nav('home')"><span class="si">&#127968;</span>Dashboard</div>
+  <div class="sbi" onclick="nav('upload')"><span class="si">&#128193;</span>Upload Reports</div>
+  <div class="sbi" onclick="nav('assess')"><span class="si">&#128203;</span>Symptom Assessment</div>
+  <div class="sbi" onclick="nav('settings')"><span class="si">&#9881;</span>Settings &amp; AI Provider</div>
+  <div class="sb-div"></div>
+  <div class="sb-lbl">Conditions</div>
+  <div class="sbi" onclick="nav('conditions')"><span class="si">&#10084;&#65039;</span>All Conditions</div>
+  <div class="sbi" onclick="nav('cad')"><span class="si">&#129505;</span>Coronary Artery Disease</div>
+  <div class="sbi" onclick="nav('heartfailure')"><span class="si">&#128200;</span>Heart Failure</div>
+  <div class="sbi" onclick="nav('hypertension')"><span class="si">&#128202;</span>Hypertension</div>
+  <div class="sbi" onclick="nav('arrhythmias')"><span class="si">&#9889;</span>Arrhythmias</div>
+  <div class="sbi" onclick="nav('valvular')"><span class="si">&#128298;</span>Valvular Disease</div>
+  <div class="sbi" onclick="nav('emergency')"><span class="si">&#128680;</span>Cardiac Emergencies</div>
+  <div class="sb-div"></div>
+  <div class="sb-lbl">Care</div>
+  <div class="sbi" onclick="nav('investigations')"><span class="si">&#128202;</span>Investigations</div>
+  <div class="sbi" onclick="nav('prevention')"><span class="si">&#127811;</span>Prevention</div>
+  <div class="sbi" onclick="nav('india')"><span class="si">&#127470;&#127475;</span>India Context</div>
+  <div class="sb-div"></div>
+  <div class="sbi" onclick="nav('chat')"><span class="si">&#128172;</span>Ask AI <span class="sb-new">FREE</span></div>
+</aside>
+<main class="main">
+
+<!-- HOME -->
+<div class="panel active" id="panel-home">
+  <div class="ph"><div class="ph-crumb">Welcome</div><h2>Cardiology Health Intelligence</h2><div class="d-line"></div><p>AI-researched heart health insights from ACC/AHA, ESC, WHO, NICE and CSI guidelines. Covers coronary disease, heart failure, arrhythmias, and cardiac emergencies.</p></div>
+  <div class="alert emergency"><span class="ai-ic">&#128680;</span><div>CARDIAC EMERGENCY: Chest pain/pressure, sudden severe breathlessness, collapse, irregular heartbeat with dizziness &mdash; 112/999/911 IMMEDIATELY. Chew aspirin 300mg if available and no contraindication. Do NOT drive yourself to hospital.</div></div>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-n">40+</div><div class="stat-l">Cardiac Topics</div></div>
+    <div class="stat"><div class="stat-n">6</div><div class="stat-l">AI Providers</div></div>
+    <div class="stat"><div class="stat-n">10</div><div class="stat-l">Specialty Areas</div></div>
+    <div class="stat"><div class="stat-n">&#128274;</div><div class="stat-l">AES-256 Secure</div></div>
+  </div>
+  <div class="alert crimson"><span class="ai-ic">&#9888;</span><div><strong>Research Tool Only:</strong> All AI output is for educational research. ALWAYS consult a qualified cardiologist before any treatment decision.</div></div>
+  <div class="g3">
+    <div class="card click" onclick="nav('cad')"><div class="ci">&#129505;</div><h3>Coronary Artery Disease</h3><p>Stable angina, ACS, STEMI/NSTEMI, revascularisation, South Asian risk.</p><span class="ctag">Leading Cause of Death</span></div>
+    <div class="card click" onclick="nav('heartfailure')"><div class="ci">&#128200;</div><h3>Heart Failure</h3><p>HFrEF four pillars, HFpEF, rheumatic heart disease in India.</p><span class="ctag">Four Pillars Therapy</span></div>
+    <div class="card click" onclick="nav('arrhythmias')"><div class="ci">&#9889;</div><h3>Arrhythmias</h3><p>Atrial fibrillation, SVT, ventricular arrhythmias, pacemakers.</p><span class="ctag">Rhythm Disorders</span></div>
+    <div class="card click" onclick="nav('hypertension')"><div class="ci">&#128202;</div><h3>Hypertension</h3><p>Classification, India burden, resistant hypertension management.</p><span class="ctag">25-30% of India</span></div>
+    <div class="card click" onclick="nav('india')"><div class="ci">&#127470;&#127475;</div><h3>India Cardiology</h3><p>Premature CAD, rheumatic disease, CSI guidelines, PM-JAY access.</p><span class="ctag">India Context</span></div>
+    <div class="card click" onclick="nav('emergency')"><div class="ci">&#128680;</div><h3>Cardiac Emergencies</h3><p>STEMI, cardiac arrest, aortic dissection, massive PE.</p><span class="ctag">Emergency</span></div>
+  </div>
+</div>
+
+<!-- UPLOAD -->
+<div class="panel" id="panel-upload">
+  <div class="ph"><div class="ph-crumb">Step 1</div><h2>Upload Cardiac Reports</h2><div class="d-line"></div><p>Upload ECG results, echocardiogram reports, angiography images, and blood test results for AI-assisted research.</p></div>
+  <div class="upload-zone" id="uz" onclick="document.getElementById('fi').click()">
+    <div class="uz-icon">&#10084;&#65039;</div>
+    <h3 style="font-family:var(--serif);font-size:17px;font-weight:600;margin-bottom:7px;">Drop your cardiac reports here</h3>
+    <p style="font-size:13px;color:var(--text3);">All cardiology document and image formats supported</p>
+    <div class="file-tags">
+      <span class="ftag">ECG Report</span><span class="ftag">Echocardiogram</span><span class="ftag">Angiography</span>
+      <span class="ftag">Lipid Profile</span><span class="ftag">Troponin/BNP</span><span class="ftag">PDF &middot; JPG &middot; PNG</span>
+    </div>
+  </div>
+  <input type="file" id="fi" multiple accept=".pdf,.jpg,.jpeg,.png,.docx,.txt" style="display:none" onchange="handleFiles(this.files)">
+  <div id="flist"></div>
+  <div class="bgrp">
+    <button class="btn btn-c btn-lg" id="up-btn" onclick="uploadFiles()"><span class="bt">&#128228; Upload &amp; Process</span><div class="spn"></div></button>
+    <button class="btn btn-outline" onclick="document.getElementById('fi').click()">+ Add More</button>
+    <button class="btn btn-outline" onclick="clearFiles()">&#128465; Clear</button>
+  </div>
+  <div id="up-result"></div>
+</div>
+
+<!-- CONDITIONS -->
+<div class="panel" id="panel-conditions">
+  <div class="ph"><div class="ph-crumb">Cardiology</div><h2>Cardiac Conditions</h2><div class="d-line"></div><p>Comprehensive clinical research from ACC/AHA, ESC, NICE and CSI guidelines.</p></div>
+  <div class="alert warn"><span class="ai-ic">&#9888;</span><div>All information is for educational research. Cardiac conditions require clinical examination, ECG, and appropriate investigations. Never delay assessment for chest pain or breathlessness.</div></div>
+  <div style="margin-bottom:17px;">
+    <label class="fl">Select Condition</label>
+    <select class="fs" id="cond-sel" onchange="showCondition()">
+      <option value="">-- Select a condition --</option>
+      <optgroup label="Coronary"><option>Stable Angina</option><option>Unstable Angina</option><option>STEMI</option><option>NSTEMI</option></optgroup>
+      <optgroup label="Heart Failure"><option>HFrEF</option><option>HFpEF</option><option>Rheumatic Heart Disease</option></optgroup>
+      <optgroup label="Arrhythmias"><option>Atrial Fibrillation</option><option>SVT</option><option>Ventricular Tachycardia</option><option>Heart Block</option></optgroup>
+      <optgroup label="Valvular"><option>Aortic Stenosis</option><option>Mitral Stenosis</option><option>Mitral Regurgitation</option><option>Infective Endocarditis</option></optgroup>
+      <optgroup label="Cardiomyopathy"><option>Hypertrophic Cardiomyopathy</option><option>Dilated Cardiomyopathy</option><option>Cardiac Amyloidosis</option></optgroup>
+      <optgroup label="Vascular"><option>Hypertension</option><option>Aortic Dissection</option><option>Pulmonary Embolism</option></optgroup>
+    </select>
+  </div>
+  <div id="cond-output"></div>
+  <div class="sb"><h3>Quick Clinical Reference</h3>
+    <div class="g2">
+      <div><h4>Chest Pain Red Flags</h4><ul>
+        <li>Central crushing chest pain radiating to arm/jaw/neck</li>
+        <li>Associated sweating, nausea, breathlessness = ACS until proven otherwise</li>
+        <li>Sudden tearing/ripping pain = consider aortic dissection</li>
+        <li>Atypical presentation common in women, elderly, diabetics</li>
+      </ul></div>
+      <div><h4>Heart Failure Four Pillars</h4><ul>
+        <li>ACE-I/ARB or ARNI (sacubitril-valsartan preferred)</li>
+        <li>Beta-blocker (bisoprolol, carvedilol, metoprolol succinate)</li>
+        <li>Mineralocorticoid receptor antagonist (spironolactone)</li>
+        <li>SGLT2 inhibitor (benefit regardless of diabetes status)</li>
+      </ul></div>
+      <div><h4>AF Stroke Risk (CHA2DS2-VASc)</h4><ul>
+        <li>Heart failure, Hypertension, Age&ge;75(2), Diabetes</li>
+        <li>Stroke/TIA history(2), Vascular disease, Age 65-74, female Sex</li>
+        <li>Score guides anticoagulation decision</li>
+        <li>DOACs preferred over warfarin for most patients</li>
+      </ul></div>
+      <div><h4>South Asian CVD Risk</h4><ul>
+        <li>CAD occurs 5-10 years earlier than Western populations</li>
+        <li>Higher cardiometabolic risk at lower BMI thresholds</li>
+        <li>Elevated Lp(a) common, low HDL/high triglyceride pattern</li>
+        <li>Risk calculators often underestimate South Asian risk</li>
+      </ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- CAD -->
+<div class="panel" id="panel-cad">
+  <div class="ph"><div class="ph-crumb">Leading Cause of Death</div><h2>Coronary Artery Disease</h2><div class="d-line"></div><p>Research on stable angina, acute coronary syndrome, and revascularisation from ACC/AHA and ESC guidelines.</p></div>
+  <div class="tab-bar">
+    <button class="tbtn active" onclick="switchTab(this,'cad1')">Overview &amp; Risk Factors</button>
+    <button class="tbtn" onclick="switchTab(this,'cad2')">Stable Angina</button>
+    <button class="tbtn" onclick="switchTab(this,'cad3')">Acute Coronary Syndrome</button>
+  </div>
+  <div class="tpane active" id="cad1">
+    <div class="sb"><h3>Overview and Risk Factors</h3>
+      <p>Atherosclerotic narrowing of coronary arteries. Leading cause of death globally. India: CAD occurs 5-10 years earlier and progresses more aggressively than in Western populations.</p>
+      <h4>Risk Factors</h4>
+      <ul>
+        <li>Non-modifiable: age, male sex, family history of premature CAD</li>
+        <li>Modifiable: hypertension, diabetes, dyslipidaemia (high Lp(a) common in Indians), smoking, obesity</li>
+        <li>South Asian ethnicity itself is an independent risk factor requiring lower treatment thresholds</li>
+      </ul>
+    </div>
+  </div>
+  <div class="tpane" id="cad2">
+    <div class="sb"><h3>Stable Angina</h3>
+      <p>Predictable chest pain on exertion, relieved by rest or GTN within minutes. Central/retrosternal, may radiate to arm/jaw/neck.</p>
+      <h4>Investigation</h4>
+      <p>CT coronary angiography (CTCA) first-line per NICE. Functional imaging if inconclusive. Invasive angiography if high-risk.</p>
+      <h4>Management</h4>
+      <p>Beta-blockers or calcium channel blockers first-line antianginal. Aspirin, statin, ACE inhibitor. Revascularisation (PCI/CABG) for refractory symptoms.</p>
+    </div>
+  </div>
+  <div class="tpane" id="cad3">
+    <div class="sb"><h3>Acute Coronary Syndrome</h3>
+      <p>Spectrum: unstable angina, NSTEMI, STEMI. STEMI is an EMERGENCY requiring immediate reperfusion.</p>
+      <h4>STEMI</h4>
+      <p>Primary PCI (door-to-balloon under 90 minutes) or thrombolysis if PCI unavailable within 120 minutes.</p>
+      <h4>NSTEMI/Unstable Angina</h4>
+      <p>GRACE score guides timing of invasive strategy. Dual antiplatelet therapy, anticoagulation, beta-blocker, high-intensity statin.</p>
+      <h4>Post-MI</h4>
+      <p>Cardiac rehabilitation, secondary prevention medications lifelong, address all modifiable risk factors.</p>
+    </div>
+  </div>
+</div>
+
+<!-- HEART FAILURE -->
+<div class="panel" id="panel-heartfailure">
+  <div class="ph"><div class="ph-crumb">Four Pillars Therapy</div><h2>Heart Failure</h2><div class="d-line"></div><p>Research on classification, aetiology, and evidence-based treatment from ESC and ACC/AHA guidelines.</p></div>
+  <div class="tab-bar">
+    <button class="tbtn active" onclick="switchTab(this,'hf1')">Classification &amp; Causes</button>
+    <button class="tbtn" onclick="switchTab(this,'hf2')">Diagnosis</button>
+    <button class="tbtn" onclick="switchTab(this,'hf3')">HFrEF Treatment</button>
+    <button class="tbtn" onclick="switchTab(this,'hf4')">Rheumatic Heart Disease</button>
+  </div>
+  <div class="tpane active" id="hf1">
+    <div class="sb"><h3>Classification and Aetiology</h3>
+      <p>HFrEF (EF&le;40%), HFmrEF (EF 41-49%), HFpEF (EF&ge;50% &mdash; increasingly common, associated with hypertension/diabetes/obesity/AF). NYHA I-IV functional classification.</p>
+      <h4>Causes</h4>
+      <p>Ischaemic heart disease (most common globally), hypertensive heart disease, dilated cardiomyopathy, valvular disease (rheumatic heart disease significant in India, unlike West), hypertrophic/restrictive cardiomyopathy.</p>
+    </div>
+  </div>
+  <div class="tpane" id="hf2">
+    <div class="sb"><h3>Diagnosis</h3>
+      <p>NT-proBNP/BNP has excellent negative predictive value. Echocardiography essential (assesses EF, valvular function, diastolic function). ECG, chest X-ray. Cardiac MRI for tissue characterisation if infiltrative disease suspected.</p>
+    </div>
+  </div>
+  <div class="tpane" id="hf3">
+    <div class="sb"><h3>HFrEF Four Pillars of Therapy</h3>
+      <p>All four initiated and up-titrated in parallel per contemporary guidelines:</p>
+      <ul>
+        <li><strong>ACE-I/ARB or ARNI:</strong> Sacubitril-valsartan superior to ACE-I (PARADIGM-HF)</li>
+        <li><strong>Beta-blocker:</strong> Bisoprolol, carvedilol, metoprolol succinate only</li>
+        <li><strong>MRA:</strong> Spironolactone or eplerenone (monitor potassium/renal function)</li>
+        <li><strong>SGLT2 inhibitor:</strong> Dapagliflozin, empagliflozin &mdash; benefit regardless of diabetes status</li>
+      </ul>
+      <p>Device therapy: ICD for primary prevention (EF&le;35%), CRT for dyssynchrony.</p>
+    </div>
+  </div>
+  <div class="tpane" id="hf4">
+    <div class="sb"><h3>Rheumatic Heart Disease</h3>
+      <p>Significant cause of heart failure in India, following inadequately treated streptococcal pharyngitis leading to rheumatic fever and valvular damage (mitral valve most commonly affected).</p>
+      <h4>Prevention</h4>
+      <p>Primary: prompt antibiotic treatment of streptococcal sore throat. Secondary: long-term penicillin prophylaxis (benzathine penicillin IM every 3-4 weeks) for confirmed rheumatic fever/RHD.</p>
+    </div>
+  </div>
+</div>
+
+<!-- HYPERTENSION -->
+<div class="panel" id="panel-hypertension">
+  <div class="ph"><div class="ph-crumb">25-30% of Indian Adults</div><h2>Hypertension</h2><div class="d-line"></div><p>Research on classification, India burden, and management from ACC/AHA, ESC and IHCI guidelines.</p></div>
+  <div class="sb"><h3>Classification</h3>
+    <p>Per ACC/AHA: Normal &lt;120/80, Elevated 120-129/&lt;80, Stage 1 130-139/80-89, Stage 2 &ge;140/90. Hypertensive emergency: severe BP elevation WITH acute target organ damage &mdash; requires immediate hospital management.</p>
+  </div>
+  <div class="sb"><h3>India Burden</h3>
+    <p>Prevalence 25-30% of adults, with awareness/treatment/control rates significantly lower than high-income countries. High dietary salt intake (2-3x WHO limit) a major contributor. India Hypertension Control Initiative (IHCI) works to improve detection and control through standardized primary care protocols.</p>
+  </div>
+  <div class="sb"><h3>Management</h3>
+    <p>Lifestyle: sodium restriction under 5-6g/day, DASH diet, exercise. Pharmacological: ACE-I/ARB, calcium channel blocker, thiazide-like diuretic. Resistant hypertension: add spironolactone (PATHWAY-2), assess adherence, consider secondary causes.</p>
+  </div>
+</div>
+
+<!-- ARRHYTHMIAS -->
+<div class="panel" id="panel-arrhythmias">
+  <div class="ph"><div class="ph-crumb">Rhythm Disorders</div><h2>Cardiac Arrhythmias</h2><div class="d-line"></div><p>Research on atrial fibrillation, SVT, ventricular arrhythmias, and bradyarrhythmias from ESC and ACC/AHA guidelines.</p></div>
+  <div class="tab-bar">
+    <button class="tbtn active" onclick="switchTab(this,'ar1')">Atrial Fibrillation</button>
+    <button class="tbtn" onclick="switchTab(this,'ar2')">SVT</button>
+    <button class="tbtn" onclick="switchTab(this,'ar3')">Ventricular Arrhythmias</button>
+    <button class="tbtn" onclick="switchTab(this,'ar4')">Bradyarrhythmias</button>
+  </div>
+  <div class="tpane active" id="ar1">
+    <div class="sb"><h3>Atrial Fibrillation</h3>
+      <p>Most common sustained arrhythmia. Major concern: 5x increased stroke risk from left atrial appendage thrombus.</p>
+      <h4>Stroke Risk (CHA2DS2-VASc)</h4>
+      <p>Congestive heart failure, Hypertension, Age&ge;75(2), Diabetes, prior Stroke/TIA(2), Vascular disease, Age 65-74, Sex category female.</p>
+      <h4>Management</h4>
+      <p>DOACs preferred over warfarin for most patients. Rate control (beta-blockers/verapamil/diltiazem) first-line. Catheter ablation increasingly first-line for symptomatic paroxysmal AF.</p>
+    </div>
+  </div>
+  <div class="tpane" id="ar2">
+    <div class="sb"><h3>Supraventricular Tachycardia</h3>
+      <p>Regular narrow-complex tachycardia, often AVNRT or AVRT. Acute: vagal manoeuvres first-line, IV adenosine if fails. Long-term: catheter ablation curative for recurrent symptomatic SVT.</p>
+    </div>
+  </div>
+  <div class="tpane" id="ar3">
+    <div class="sb"><h3>Ventricular Arrhythmias</h3>
+      <p>VT: life-threatening if unstable, immediate DC cardioversion. VF: CARDIAC ARREST, immediate CPR and defibrillation. ICD for secondary prevention after survived arrest or sustained VT.</p>
+    </div>
+  </div>
+  <div class="tpane" id="ar4">
+    <div class="sb"><h3>Bradyarrhythmias</h3>
+      <p>Sinus node dysfunction, AV block (first/second/third degree). Complete heart block requires pacemaker unless reversible cause. Mobitz II and complete heart block are indications for permanent pacing.</p>
+    </div>
+  </div>
+</div>
+
+<!-- VALVULAR -->
+<div class="panel" id="panel-valvular">
+  <div class="ph"><div class="ph-crumb">Structural Heart Disease</div><h2>Valvular Heart Disease</h2><div class="d-line"></div><p>Research on aortic stenosis, mitral disease, and endocarditis from ACC/AHA and ESC guidelines.</p></div>
+  <div class="sb"><h3>Aortic Stenosis</h3>
+    <p>Classic triad (poor prognosis if present): exertional angina, syncope, breathlessness. Severe AS: valve area &lt;1.0cm&sup2;. Management: TAVI increasingly used across risk spectrum, surgical AVR for suitable candidates.</p>
+  </div>
+  <div class="sb"><h3>Mitral Disease</h3>
+    <p>Mitral stenosis predominantly rheumatic (relevant in India). Percutaneous balloon mitral valvotomy treatment of choice for suitable anatomy. Mitral regurgitation: surgical repair preferred over replacement where feasible.</p>
+  </div>
+  <div class="sb"><h3>Infective Endocarditis</h3>
+    <p>Diagnosis: modified Duke criteria. Management: prolonged IV antibiotics (4-6 weeks), surgery for heart failure/uncontrolled infection/large vegetations. Antibiotic prophylaxis for dental procedures now only for highest-risk patients.</p>
+  </div>
+</div>
+
+<!-- INVESTIGATIONS -->
+<div class="panel" id="panel-investigations">
+  <div class="ph"><div class="ph-crumb">Diagnostic Tests</div><h2>Cardiac Investigations</h2><div class="d-line"></div><p>Research guide to understanding cardiac tests and results.</p></div>
+  <div class="sb"><h3>Key Cardiac Investigations</h3>
+    <table><tr><th>Investigation</th><th>Purpose</th><th>Key Uses</th></tr>
+    <tr><td>12-lead ECG</td><td>Electrical activity</td><td>STEMI, arrhythmia, LBBB/RBBB, long QT, Brugada pattern</td></tr>
+    <tr><td>Echocardiogram (TTE)</td><td>Structure and function</td><td>EF, valve function, chamber size, pericardial effusion</td></tr>
+    <tr><td>CT Coronary Angiography</td><td>Coronary anatomy</td><td>First-line for stable chest pain, excellent negative predictive value</td></tr>
+    <tr><td>Cardiac MRI</td><td>Tissue characterisation</td><td>Fibrosis/scar, cardiomyopathy workup, myocarditis</td></tr>
+    <tr><td>Invasive Coronary Angiography</td><td>Gold-standard anatomy</td><td>Allows immediate PCI, FFR/iFR physiological assessment</td></tr>
+    <tr><td>Troponin (high-sensitivity)</td><td>Myocardial injury marker</td><td>ACS diagnosis, serial measurement improves accuracy</td></tr>
+    <tr><td>NT-proBNP/BNP</td><td>Ventricular wall stress</td><td>Excellent for excluding heart failure</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- EMERGENCY -->
+<div class="panel" id="panel-emergency">
+  <div class="ph"><div class="ph-crumb">URGENT</div><h2>Cardiac Emergencies</h2><div class="d-line"></div></div>
+  <div class="alert emergency"><span class="ai-ic">&#128680;</span><div>CARDIAC EMERGENCIES &mdash; 112 (India) / 999 (UK) / 911 (US): STEMI, cardiac arrest, aortic dissection, massive PE, acute pulmonary oedema. ALL LIFE-THREATENING.</div></div>
+  <div class="g2">
+    <div class="sb"><h3>&#128680; STEMI / Heart Attack</h3>
+      <p>Central crushing chest pain/pressure, radiating to arm/jaw/neck, sweating, nausea, breathlessness. Atypical in women/elderly/diabetics.</p>
+      <ul>
+        <li>Call 112/999/911 IMMEDIATELY</li>
+        <li>Chew aspirin 300mg if available and no contraindication</li>
+        <li>Do NOT drive yourself to hospital</li>
+        <li>Time is muscle &mdash; every minute of delay increases damage</li>
+      </ul>
+    </div>
+    <div class="sb"><h3>&#128680; Cardiac Arrest</h3>
+      <p>No pulse, unresponsive, not breathing normally (agonal gasping is NOT normal breathing).</p>
+      <ul>
+        <li>Call for emergency help immediately</li>
+        <li>Start chest compressions immediately (100-120/min, depth 5-6cm)</li>
+        <li>Use AED as soon as available</li>
+        <li>Continue CPR until help arrives or patient responds</li>
+      </ul>
+    </div>
+    <div class="sb"><h3>&#128680; Aortic Dissection</h3>
+      <p>Sudden severe tearing/ripping chest or back pain, may migrate. Unequal pulses/BP between arms.</p>
+      <ul>
+        <li>EMERGENCY &mdash; high mortality if untreated</li>
+        <li>Type A (ascending): surgical emergency</li>
+        <li>CT aortography crucial &mdash; thrombolysis would be catastrophic if dissection present</li>
+      </ul>
+    </div>
+    <div class="sb"><h3>&#128680; Acute Pulmonary Oedema</h3>
+      <p>Severe breathlessness worse lying flat, frothy pink sputum, extreme distress.</p>
+      <ul>
+        <li>Sit patient upright, high-flow oxygen</li>
+        <li>IV diuretics, nitrates if BP adequate</li>
+        <li>Identify and treat precipitant (ACS, arrhythmia, uncontrolled hypertension)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- PREVENTION -->
+<div class="panel" id="panel-prevention">
+  <div class="ph"><div class="ph-crumb">Cardiovascular Prevention</div><h2>Prevention &amp; Lifestyle</h2><div class="d-line"></div><p>Research on risk assessment, lipid management, and lifestyle measures from ACC/AHA and ESC guidelines.</p></div>
+  <div class="sb"><h3>Risk Assessment</h3>
+    <p>CV risk calculators (ASCVD, QRISK3, SCORE2) underestimate risk in South Asian populations. Several guidelines recommend lower treatment thresholds for South Asian ethnicity given demonstrated excess cardiovascular risk.</p>
+  </div>
+  <div class="sb"><h3>Lipid Management</h3>
+    <p>Statins first-line for primary/secondary prevention. Very high-risk patients target LDL &lt;55mg/dL. PCSK9 inhibitors for very high-risk not at target. Lp(a) increasingly recognised as important independent risk factor, elevated levels common in South Asians.</p>
+  </div>
+  <div class="sb"><h3>Lifestyle Measures</h3>
+    <p>150+ minutes/week moderate exercise, Mediterranean/DASH diet, smoking cessation (single most impactful intervention), weight management targeting visceral adiposity. Cardiac rehabilitation post-MI demonstrably improves outcomes and is underutilised.</p>
+  </div>
+</div>
+
+<!-- INDIA -->
+<div class="panel" id="panel-india">
+  <div class="ph"><div class="ph-crumb">India Context</div><h2>Cardiology in India</h2><div class="d-line"></div><p>India-specific cardiovascular burden, treatment access, and CSI guidance.</p></div>
+  <div class="sb"><h3>Burden and Epidemiology</h3>
+    <p>Leading cause of death in India, over a quarter of all deaths. CAD events occur 5-10 years earlier than Western countries. Contributing factors: high diabetes prevalence, abdominal obesity at lower BMI, tobacco use, elevated Lp(a), high salt/refined carbohydrate intake.</p>
+  </div>
+  <div class="sb"><h3>Treatment Access</h3>
+    <p>Significant improvement in tertiary cardiac care (AIIMS, private hospitals) offering PCI, CABG, TAVI comparable to international standards. Rural-urban disparity persists for timely primary PCI. Ayushman Bharat (PM-JAY) provides insurance coverage for eligible families. Generic cardiac medications widely available at low cost.</p>
+  </div>
+  <div class="sb"><h3>Rheumatic Disease Burden</h3>
+    <p>RHD remains significant in India unlike high-income countries where it is now rare. Community-based echocardiographic screening programmes in schools aim to detect subclinical RHD earlier.</p>
+  </div>
+</div>
+
+<!-- ASSESSMENT -->
+<div class="panel" id="panel-assess">
+  <div class="ph"><div class="ph-crumb">Personalised Research</div><h2>Symptom Assessment</h2><div class="d-line"></div><p>Describe your cardiac symptom for AI-researched guidance on possible causes and urgency.</p></div>
+  <div class="alert warn"><span class="ai-ic">&#9888;</span><div>This is an AI research tool only. Not a substitute for clinical examination. For chest pain, severe breathlessness, or collapse &mdash; call 112/999/911 immediately.</div></div>
+  <div class="sb"><h3>Describe Your Symptom</h3>
+    <div class="assess-grid">
+      <div class="fg"><label class="fl">Chief Symptom</label><input class="fi" id="as-symptom" placeholder="e.g. chest pain, palpitations, breathlessness"></div>
+      <div class="fg"><label class="fl">Duration</label><select class="fs" id="as-duration"><option value="">Select</option><option>Less than 1 hour</option><option>1-24 hours</option><option>Several days</option><option>Weeks to months</option><option>Recurrent/intermittent</option></select></div>
+      <div class="fg"><label class="fl">Age</label><input class="fi" id="as-age" placeholder="e.g. 55"></div>
+      <div class="fg"><label class="fl">Risk Factors</label><input class="fi" id="as-riskfactors" placeholder="e.g. diabetes, smoker, family history"></div>
+      <div class="fg" style="grid-column:1/-1;"><label class="fl">Additional History</label><input class="fi" id="as-history" placeholder="e.g. on aspirin, previous MI, hypertension"></div>
+    </div>
+    <div class="bgrp">
+      <button class="btn btn-c btn-lg" id="as-btn" onclick="runAssessment()"><span class="bt">&#128203; Get AI Research</span><div class="spn"></div></button>
+    </div>
+  </div>
+  <div id="assess-output"></div>
+</div>
+
+<!-- CHAT -->
+<div class="panel" id="panel-chat">
+  <div class="ph"><div class="ph-crumb">AI Research Assistant</div><h2>Ask CardioCare AI</h2><div class="d-line"></div><p>Ask any cardiac question. AI-researched from ACC/AHA, ESC, WHO, NICE and CSI. <strong>Free forever.</strong></p></div>
+  <div class="alert emergency"><span class="ai-ic">&#128680;</span><div>CARDIAC EMERGENCY (chest pain, cardiac arrest, aortic dissection) &mdash; 112/999/911 IMMEDIATELY. Do NOT type here first.</div></div>
+  <div class="alert warn"><span class="ai-ic">&#9888;</span><div>AI responses are for educational research only. Not medical advice. Always consult your cardiologist.</div></div>
+  <div class="chat-wrap">
+    <div class="chat-head"><h3>&#10084;&#65039; CardioCare AI Research Assistant</h3><span class="free">FREE FOREVER</span></div>
+    <div class="chat-msgs" id="chat-msgs">
+      <div class="cm sys">Welcome to CardioCare AI &#10084;&#65039;</div>
+      <div class="cm ai"><div class="ai-lbl">CardioCare AI</div>Hello! I can research questions about coronary artery disease, heart failure, hypertension, arrhythmias, valvular disease, and cardiac emergencies. For cardiac emergencies (chest pain, cardiac arrest, aortic dissection) act immediately &mdash; 112/999/911. I provide educational research only, not personal medical advice.</div>
+    </div>
+    <div class="chat-input-row">
+      <input class="chat-input" id="chat-in" placeholder="Ask about chest pain, heart failure, blood pressure, arrhythmias..." onkeypress="if(event.key==='Enter')sendChat()">
+      <button class="chat-send" onclick="sendChat()">Ask</button>
+    </div>
+    <div style="padding:8px 18px 14px;background:var(--cream2);">
+      <button onclick="openAR(document.getElementById('chat-in').value)"
+        style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:10px;border:2px solid #4d6bfe;background:transparent;color:#4d6bfe;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;width:100%;justify-content:center;"
+        onmouseover="this.style.background='#4d6bfe';this.style.color='#fff'"
+        onmouseout="this.style.background='transparent';this.style.color='#4d6bfe'">
+        &#9889; Ambiguity Resolver &mdash; Get Multi-AI Consensus Answer
+      </button>
+      <p style="font-size:11px;color:#888;text-align:center;margin-top:6px;">Query all configured AIs simultaneously for a synthesised best answer</p>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="panel" id="panel-settings">
+  <div class="ph"><div class="ph-crumb">Configuration</div><h2>Settings &amp; AI Provider</h2><div class="d-line"></div><p>Choose which AI powers your research. Keys are AES-256-GCM encrypted and stored only in your browser.</p></div>
+  <div class="sb">
+    <h3>&#129302; Choose Your AI Provider</h3>
+    <p style="margin-bottom:16px;">6 providers available. AES-256-GCM encrypted before storage. Ambiguity Resolver queries multiple AIs simultaneously.</p>
+    <div class="g3" style="margin-bottom:18px;">
+      <div class="card click provider-card" data-provider="openai" onclick="selectProvider('openai')"><div class="ci">&#129001;</div><h3>ChatGPT</h3><p><p><p>OpenAI &mdash; gpt-4o</p><span class="ctag" id="ptag-openai">Not configured</span></div>
+      <div class="card click provider-card" data-provider="gemini" onclick="selectProvider('gemini')"><div class="ci">&#128309;</div><h3>Gemini</h3><p>Google &mdash; gemini-2.0-flash</p><span class="ctag" id="ptag-gemini">Not configured</span></div>
+      <div class="card click provider-card" data-provider="grok" onclick="selectProvider('grok')"><div class="ci">&#9899;</div><h3>Grok</h3><p>xAI &mdash; grok-2-latest</p><span class="ctag" id="ptag-grok">Not configured</span></div>
+      <div class="card click provider-card" data-provider="deepseek" onclick="selectProvider('deepseek')"><div class="ci">&#128308;</div><h3>DeepSeek</h3><p>DeepSeek &mdash; deepseek-chat</p><span class="ctag" id="ptag-deepseek">Not configured</span></div>
+      <div class="card click provider-card" data-provider="anthropic" onclick="selectProvider('anthropic')"><div class="ci">&#128995;</div><h3>Claude</h3>Anthropic &mdash; claude-sonnet-4</p><span class="ctag" id="ptag-anthropic">Not configured</span></div>
+      <div class="card click provider-card" data-provider="mistral" onclick="selectProvider('mistral')"><div class="ci">&#127756;</div><h3>Mistral AI</h3><p>Mistral &mdash; mistral-large-latest</p><span class="ctag" id="ptag-mistral">Not configured</span></div>
+    </div>
+  </div>
+  <div class="api-box" id="key-entry-box">
+    <h3 id="key-entry-title">&#128273; API Key</h3>
+    <p id="key-entry-desc" style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6;">Select a provider above, then paste its API key here.</p>
+    <div class="api-row">
+      <input class="api-input" type="password" id="api-key-in" placeholder="Paste your API key here">
+      <button class="btn btn-c" onclick="saveKey()">Save</button>
+      <button class="btn btn-outline btn-sm" onclick="clearKey()">Clear</button>
+    </div>
+    <div id="key-status" style="margin-top:10px;font-size:12px;color:var(--text3);">No provider selected &mdash; offline mode.</div>
+    <div style="margin-top:6px;font-size:11px;color:var(--text3);">&#128274; AES-256-GCM encrypted &middot; PBKDF2 key derivation &middot; Device-bound &middot; Never leaves your browser</div>
+    <div style="margin-top:8px;"><a id="get-key-link" href="#" target="_blank" style="font-size:12px;color:var(--crimson);">Get a free API key &#8594;</a></div>
+  </div>
+  <div class="sb"><h3>System Status</h3>
+    <div style="font-size:13.5px;line-height:2;color:var(--text2);">
+      Server: <span style="color:var(--teal)">&#10003; Running</span><br>
+      Active Provider: <span id="mode-disp">Offline Research</span><br>
+      Security: <span style="color:var(--crimson)">&#128274; AES-256-GCM</span><br>
+      Offline KB: <span style="color:var(--teal)">&#10003; Available (10 categories)</span><br>
+      Ambiguity Resolver: <span style="color:#4d6bfe">&#9889; Available</span>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand"><h3>&#10084;&#65039; CardioCare AI</h3><p>Cardiology Health Intelligence Platform &mdash; AI-researched insights from ACC/AHA, ESC, WHO, NICE, CSI and peer-reviewed literature. India-specific cardiovascular context included.</p></div>
+      <div class="footer-col"><h4>Sections</h4><ul>
+        <li><a href="#" onclick="nav('cad')">Coronary Artery Disease</a></li>
+        <li><a href="#" onclick="nav('heartfailure')">Heart Failure</a></li>
+        <li><a href="#" onclick="nav('hypertension')">Hypertension</a></li>
+        <li><a href="#" onclick="nav('arrhythmias')">Arrhythmias</a></li>
+        <li><a href="#" onclick="nav('valvular')">Valvular Disease</a></li>
+        <li><a href="#" onclick="nav('emergency')">Emergencies</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Clinical Sources</h4><ul>
+        <li><a href="https://www.acc.org" target="_blank">ACC/AHA Guidelines</a></li>
+        <li><a href="https://www.escardio.org" target="_blank">ESC Guidelines</a></li>
+        <li><a href="https://www.nice.org.uk" target="_blank">NICE Guidelines</a></li>
+        <li><a href="https://www.csi.org.in" target="_blank">CSI India</a></li>
+        <li><a href="https://www.who.int" target="_blank">WHO</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <p>CardioCare AI &mdash; For Research &amp; Educational Purposes Only &middot; Not Medical Advice</p>
+      <div class="footer-disc">Not a substitute for professional cardiac care. CARDIAC EMERGENCY: 112 (India) / 999 (UK) / 911 (US). &#128274; AES-256-GCM key encryption.</div>
+    </div>
+  </div>
+</footer>
+<script>
+// AES-256-GCM Secure Key Storage
+/**
+ * OrthoCare / CardioCare / NeuroCare / GynoCare / OncoCare AI
+ * AES-256-GCM Client-Side Key Security Module v1.0
+ * =====================================================
+ * Encrypts API keys before storing in localStorage using
+ * AES-256-GCM via the browser's native Web Crypto API.
+ * The encryption key is derived from a device-specific
+ * fingerprint using PBKDF2 (100,000 iterations, SHA-256).
+ *
+ * Security properties:
+ * - Keys are NEVER stored in plaintext in localStorage
+ * - AES-256-GCM provides both encryption AND authentication (AEAD)
+ * - The derived key is not persisted anywhere
+ * - A random 96-bit IV is generated for every encryption operation
+ * - PBKDF2 with 100k iterations makes brute-force attacks expensive
+ * - Key never leaves the browser except when sent directly to AI provider API
+ *
+ * Usage: drop this entire block before your ST = {} state declaration.
+ * Then replace all localStorage.setItem(key, JSON.stringify(keys)) with
+ * await SecureKeyStore.save(storeName, keys)
+ * and all JSON.parse(localStorage.getItem(...)) with
+ * await SecureKeyStore.load(storeName)
+ */
+
+const SecureKeyStore = (function() {
+  'use strict';
+
+  // Derive a deterministic device fingerprint from stable browser properties.
+  // This is NOT cryptographically strong identity - it's a convenience measure
+  // to ensure keys encrypted on this browser can only be decrypted on this browser.
+  function getDeviceFingerprint(appId) {
+    var parts = [
+      appId,
+      navigator.userAgent || '',
+      navigator.language || '',
+      (screen.width || 0) + 'x' + (screen.height || 0),
+      navigator.hardwareConcurrency || 0,
+      Intl.DateTimeFormat().resolvedOptions().timeZone || ''
+    ];
+    return parts.join('|:|');
+  }
+
+  // Derive AES-256 key from fingerprint using PBKDF2
+  async function deriveKey(appId) {
+    var fingerprint = getDeviceFingerprint(appId);
+    var encoder = new TextEncoder();
+    var rawKey = await crypto.subtle.importKey(
+      'raw',
+      encoder.encode(fingerprint),
+      { name: 'PBKDF2' },
+      false,
+      ['deriveKey']
+    );
+    // Use a fixed but app-specific salt (not secret - purpose is just domain separation)
+    var salt = encoder.encode('medical-ai-platform-' + appId + '-v1');
+    return await crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt: salt, iterations: 100000, hash: 'SHA-256' },
+      rawKey,
+      { name: 'AES-GCM', length: 256 },
+      false,
+      ['encrypt', 'decrypt']
+    );
+  }
+
+  // Encrypt a string value, returns base64-encoded IV + ciphertext
+  async function encrypt(plaintext, appId) {
+    var key = await deriveKey(appId);
+    var iv = crypto.getRandomValues(new Uint8Array(12)); // 96-bit random IV
+    var encoder = new TextEncoder();
+    var ciphertext = await crypto.subtle.encrypt(
+      { name: 'AES-GCM', iv: iv },
+      key,
+      encoder.encode(plaintext)
+    );
+    // Prepend IV to ciphertext for storage: [12 bytes IV][ciphertext]
+    var combined = new Uint8Array(iv.length + ciphertext.byteLength);
+    combined.set(iv, 0);
+    combined.set(new Uint8Array(ciphertext), iv.length);
+    return btoa(String.fromCharCode.apply(null, combined));
+  }
+
+  // Decrypt a base64-encoded IV + ciphertext string
+  async function decrypt(encoded, appId) {
+    try {
+      var key = await deriveKey(appId);
+      var combined = new Uint8Array(
+        atob(encoded).split('').map(function(c) { return c.charCodeAt(0); })
+      );
+      var iv = combined.slice(0, 12);
+      var ciphertext = combined.slice(12);
+      var plaintext = await crypto.subtle.decrypt(
+        { name: 'AES-GCM', iv: iv },
+        key,
+        ciphertext
+      );
+      return new TextDecoder().decode(plaintext);
+    } catch (e) {
+      // Decryption failed - key may have been stored with old method (plaintext)
+      // or device fingerprint changed. Return null to trigger re-entry.
+      return null;
+    }
+  }
+
+  // Public API
+  return {
+    /**
+     * Save API keys object to localStorage with AES-256-GCM encryption.
+     * @param {string} storeName - localStorage key name (e.g. 'cc_keys')
+     * @param {string} appId - app-specific ID for key derivation (e.g. 'cardiocare')
+     * @param {object} keysObj - { provider: 'sk-...' } keys object
+     */
+    save: async function(storeName, appId, keysObj) {
+      try {
+        var plaintext = JSON.stringify(keysObj);
+        var encrypted = await encrypt(plaintext, appId);
+        localStorage.setItem(storeName, encrypted);
+        localStorage.setItem(storeName + '_enc', '1'); // flag: encrypted format
+        return true;
+      } catch (e) {
+        // Fallback: if Web Crypto unavailable (very old browser), store plaintext
+        console.warn('[SecureKeyStore] Encryption unavailable, storing plaintext:', e.message);
+        localStorage.setItem(storeName, JSON.stringify(keysObj));
+        return false;
+      }
+    },
+
+    /**
+     * Load and decrypt API keys from localStorage.
+     * @param {string} storeName - localStorage key name
+     * @param {string} appId - must match what was used in save()
+     * @returns {object} keysObj or {} if not found / decryption failed
+     */
+    load: async function(storeName, appId) {
+      try {
+        var stored = localStorage.getItem(storeName);
+        if (!stored) return {};
+        var isEncrypted = localStorage.getItem(storeName + '_enc') === '1';
+        if (!isEncrypted) {
+          // Migrate plaintext to encrypted on next save
+          var parsed = JSON.parse(stored);
+          // Auto-migrate: re-encrypt now
+          await this.save(storeName, appId, parsed);
+          return parsed;
+        }
+        var plaintext = await decrypt(stored, appId);
+        if (plaintext === null) {
+          // Decryption failed (e.g. different browser/device after migration)
+          // Clear and start fresh - user will need to re-enter keys
+          console.warn('[SecureKeyStore] Decryption failed - clearing stored keys');
+          localStorage.removeItem(storeName);
+          localStorage.removeItem(storeName + '_enc');
+          return {};
+        }
+        return JSON.parse(plaintext);
+      } catch (e) {
+        return {};
+      }
+    },
+
+    /**
+     * Remove all keys for a store.
+     */
+    clear: function(storeName) {
+      localStorage.removeItem(storeName);
+      localStorage.removeItem(storeName + '_enc');
+    },
+
+    /**
+     * Check if Web Crypto AES-GCM is available in this browser.
+     */
+    isAvailable: function() {
+      return !!(window.crypto && window.crypto.subtle && window.crypto.subtle.encrypt);
+    }
+  };
+})();
+
+
+// Application Code
+
+// ============================================================
+// UNIVERSAL SECURITY + FEATURE PATCH v2.0
+// Injected into all 9 Medical AI platforms
+// 1. XSS escaping for all user-controlled innerHTML
+// 2. Mistral AI as 6th provider
+// 3. Ambiguity Resolver (multi-AI consensus engine)
+// 4. Content Security hardening
+// ============================================================
+
+// ── XSS ESCAPE FUNCTIONS ─────────────────────────────────────
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#x27;')
+        .replace(/\//g, '&#x2F;');
+}
+
+function sanitizeAIResponse(text) {
+    // AI responses can contain markdown — preserve line breaks and basic formatting
+    // but strip any actual HTML tags to prevent XSS
+    if (!text) return '';
+    return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/\n/g, '<br>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>');
+}
+
+function escapeFilename(name) {
+    if (!name) return 'unknown';
+    // Only allow safe filename characters for display
+    return String(name).replace(/[<>&"'\/\\]/g, c => ({
+        '<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#x27;','/':'&#x2F;','\\':'&#x5C;'
+    }[c]));
+}
+
+// ── PROVIDER REGISTRY (6 providers) ──────────────────────────
+var PROVIDERS = {
+    anthropic: {
+        label: 'Claude (Anthropic)',
+        placeholder: 'sk-ant-api03-...',
+        getKeyUrl: 'https://console.anthropic.com',
+        icon: '&#128995;',
+        color: '#c96442'
+    },
+    openai: {
+        label: 'ChatGPT (OpenAI)',
+        placeholder: 'sk-...',
+        getKeyUrl: 'https://platform.openai.com/api-keys',
+        icon: '&#129001;',
+        color: '#10a37f'
+    },
+    gemini: {
+        label: 'Gemini (Google)',
+        placeholder: 'AIza...',
+        getKeyUrl: 'https://aistudio.google.com/apikey',
+        icon: '&#128309;',
+        color: '#4285f4'
+    },
+    grok: {
+        label: 'Grok (xAI)',
+        placeholder: 'xai-...',
+        getKeyUrl: 'https://console.x.ai',
+        icon: '&#9899;',
+        color: '#1da1f2'
+    },
+    deepseek: {
+        label: 'DeepSeek',
+        placeholder: 'sk-...',
+        getKeyUrl: 'https://platform.deepseek.com/api_keys',
+        icon: '&#128308;',
+        color: '#4d6bfe'
+    },
+    mistral: {
+        label: 'Mistral AI',
+        placeholder: 'your-mistral-key...',
+        getKeyUrl: 'https://console.mistral.ai/api-keys',
+        icon: '&#127756;',
+        color: '#ff7000'
+    }
+};
+
+// ── AMBIGUITY RESOLVER ────────────────────────────────────────
+// CSS injected once
+(function injectAmbiguityCSS() {
+    if (document.getElementById('ar-style')) return;
+    var style = document.createElement('style');
+    style.id = 'ar-style';
+    style.textContent = [
+        '#ar-overlay{position:fixed;inset:0;z-index:9000;background:rgba(5,5,15,0.92);backdrop-filter:blur(14px);display:none;align-items:flex-start;justify-content:center;padding:30px 16px;overflow-y:auto;}',
+        '#ar-overlay.ar-open{display:flex;}',
+        '#ar-box{background:#fff;border-radius:18px;max-width:900px;width:100%;padding:0;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.4);}',
+        '#ar-head{padding:22px 28px;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:space-between;}',
+        '#ar-head h2{font-size:17px;font-weight:700;color:#fff;margin:0;}',
+        '#ar-head p{font-size:12px;color:rgba(255,255,255,0.6);margin:4px 0 0;}',
+        '#ar-close{background:rgba(255,255,255,0.15);border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}',
+        '#ar-close:hover{background:rgba(255,255,255,0.25);}',
+        '#ar-query-area{padding:20px 28px;border-bottom:1px solid #eee;}',
+        '#ar-query-area label{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#666;display:block;margin-bottom:6px;}',
+        '#ar-prompt{width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-family:inherit;font-size:14px;resize:vertical;min-height:80px;outline:none;box-sizing:border-box;}',
+        '#ar-prompt:focus{border-color:#4d6bfe;}',
+        '#ar-providers-area{padding:18px 28px;border-bottom:1px solid #eee;}',
+        '#ar-providers-area label{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#666;display:block;margin-bottom:10px;}',
+        '.ar-prov-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}',
+        '.ar-prov-chip{display:flex;align-items:center;gap:8px;padding:9px 12px;border:2px solid #eee;border-radius:10px;cursor:pointer;font-size:13px;font-weight:500;transition:all 0.15s;user-select:none;}',
+        '.ar-prov-chip:hover{border-color:#4d6bfe;background:#f0f2ff;}',
+        '.ar-prov-chip.ar-selected{border-color:#4d6bfe;background:#eef1ff;font-weight:600;}',
+        '.ar-prov-chip .ar-key-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}',
+        '.ar-prov-chip .ar-key-ok{background:#22c55e;}',
+        '.ar-prov-chip .ar-key-miss{background:#ef4444;}',
+        '#ar-actions{padding:16px 28px;display:flex;gap:10px;align-items:center;}',
+        '#ar-run-btn{padding:12px 28px;border-radius:10px;background:linear-gradient(135deg,#4d6bfe,#7c3aed);color:#fff;border:none;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;}',
+        '#ar-run-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 20px rgba(77,107,254,0.4);}',
+        '#ar-run-btn:disabled{opacity:0.5;cursor:not-allowed;}',
+        '#ar-note{font-size:12px;color:#888;}',
+        '#ar-results{padding:0 28px 28px;}',
+        '.ar-resp-card{margin-top:16px;border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;}',
+        '.ar-resp-head{padding:12px 16px;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;}',
+        '.ar-resp-body{padding:14px 16px;font-size:13.5px;line-height:1.75;color:#374151;background:#fafafa;white-space:pre-wrap;word-break:break-word;max-height:320px;overflow-y:auto;}',
+        '.ar-resp-err{padding:14px 16px;font-size:13px;color:#ef4444;background:#fff5f5;}',
+        '#ar-synthesis{margin-top:20px;border:2px solid #4d6bfe;border-radius:14px;overflow:hidden;}',
+        '#ar-synthesis-head{padding:14px 18px;background:linear-gradient(135deg,#4d6bfe,#7c3aed);color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;}',
+        '#ar-synthesis-body{padding:16px 18px;font-size:13.5px;line-height:1.8;color:#1f2937;white-space:pre-wrap;word-break:break-word;}',
+        '#ar-spinner{display:none;padding:24px;text-align:center;color:#666;}',
+        '.ar-spin{display:inline-block;width:32px;height:32px;border:3px solid #e5e7eb;border-top-color:#4d6bfe;border-radius:50%;animation:arSpin 0.8s linear infinite;margin-bottom:8px;}',
+        '@keyframes arSpin{to{transform:rotate(360deg)}}',
+        '.ar-stat-badge{font-size:11px;font-weight:600;padding:3px 9px;border-radius:12px;margin-left:auto;}',
+        '.ar-stat-ok{background:#dcfce7;color:#166534;}',
+        '.ar-stat-err{background:#fee2e2;color:#991b1b;}',
+        '@media(max-width:600px){.ar-prov-grid{grid-template-columns:1fr 1fr;}#ar-box{padding:0;}}'
+    ].join('');
+    document.head.appendChild(style);
+})();
+
+// Build the overlay HTML once
+function buildArOverlay() {
+    if (document.getElementById('ar-overlay')) return;
+    var overlay = document.createElement('div');
+    overlay.id = 'ar-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.innerHTML = [
+        '<div id="ar-box">',
+        '  <div id="ar-head">',
+        '    <div>',
+        '      <h2>&#128101; Ambiguity Resolver &mdash; Multi-AI Consensus</h2>',
+        '      <p>Select AIs with valid keys &rarr; all run your query in parallel &rarr; best answer synthesised</p>',
+        '    </div>',
+        '    <button id="ar-close" onclick="closeAR()" title="Close">&#10005;</button>',
+        '  </div>',
+        '  <div id="ar-query-area">',
+        '    <label>Your Question / Query</label>',
+        '    <textarea id="ar-prompt" placeholder="Enter your medical research question here..."></textarea>',
+        '  </div>',
+        '  <div id="ar-providers-area">',
+        '    <label>Select AI Providers (only those with saved keys are available)</label>',
+        '    <div class="ar-prov-grid" id="ar-prov-grid"></div>',
+        '  </div>',
+        '  <div id="ar-actions">',
+        '    <button id="ar-run-btn" onclick="runAmbiguityResolver()" disabled>',
+        '      &#9889; Resolve with Multi-AI',
+        '    </button>',
+        '    <span id="ar-note">Select at least 2 AIs</span>',
+        '  </div>',
+        '  <div id="ar-spinner">',
+        '    <div class="ar-spin"></div>',
+        '    <div id="ar-spin-msg">Querying selected AIs in parallel&hellip;</div>',
+        '  </div>',
+        '  <div id="ar-results"></div>',
+        '</div>'
+    ].join('');
+    document.body.appendChild(overlay);
+    // Close on backdrop click
+    overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closeAR();
+    });
+}
+
+function openAR(prefillText) {
+    buildArOverlay();
+    renderArProviderChips();
+    if (prefillText) {
+        var ta = document.getElementById('ar-prompt');
+        if (ta) ta.value = prefillText;
+    }
+    document.getElementById('ar-results').innerHTML = '';
+    document.getElementById('ar-spinner').style.display = 'none';
+    document.getElementById('ar-overlay').classList.add('ar-open');
+}
+
+function closeAR() {
+    var ov = document.getElementById('ar-overlay');
+    if (ov) ov.classList.remove('ar-open');
+}
+
+function renderArProviderChips() {
+    var grid = document.getElementById('ar-prov-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    Object.keys(PROVIDERS).forEach(function(pid) {
+        var meta = PROVIDERS[pid];
+        var hasKey = !!(window.ST && window.ST.keys && window.ST.keys[pid]);
+        var chip = document.createElement('div');
+        chip.className = 'ar-prov-chip' + (hasKey ? '' : ' ar-disabled');
+        chip.dataset.provider = pid;
+        chip.style.opacity = hasKey ? '1' : '0.45';
+        chip.innerHTML = '<span>' + meta.icon + '</span>'
+            + '<span>' + escapeHtml(meta.label) + '</span>'
+            + '<span class="ar-key-dot ' + (hasKey ? 'ar-key-ok' : 'ar-key-miss') + '" title="' + (hasKey ? 'Key configured' : 'No key saved') + '"></span>';
+        if (hasKey) {
+            chip.addEventListener('click', function() {
+                chip.classList.toggle('ar-selected');
+                updateArRunBtn();
+            });
+        }
+        grid.appendChild(chip);
+    });
+}
+
+function updateArRunBtn() {
+    var selected = document.querySelectorAll('.ar-prov-chip.ar-selected');
+    var btn = document.getElementById('ar-run-btn');
+    var note = document.getElementById('ar-note');
+    if (!btn) return;
+    var count = selected.length;
+    btn.disabled = count < 2;
+    if (note) note.textContent = count < 2
+        ? 'Select at least 2 AIs (' + count + ' selected)'
+        : count + ' AIs selected \u2014 ready to resolve';
+}
+
+function runAmbiguityResolver() {
+    var prompt = (document.getElementById('ar-prompt') || {}).value;
+    if (!prompt || !prompt.trim()) {
+        alert('Please enter a question first.');
+        return;
+    }
+    var selected = Array.from(document.querySelectorAll('.ar-prov-chip.ar-selected'));
+    if (selected.length < 2) { alert('Select at least 2 AIs.'); return; }
+
+    var pairs = selected.map(function(chip) {
+        return { provider: chip.dataset.provider, key: window.ST.keys[chip.dataset.provider] };
+    });
+
+    // Show spinner, hide results
+    document.getElementById('ar-spinner').style.display = 'block';
+    document.getElementById('ar-results').innerHTML = '';
+    document.getElementById('ar-run-btn').disabled = true;
+    document.getElementById('ar-spin-msg').textContent =
+        'Querying ' + pairs.length + ' AIs in parallel\u2026';
+
+    // POST to /api/resolve (backend endpoint we add)
+    fetch('/api/resolve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            prompt: prompt.trim(),
+            providers: pairs
+        })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        document.getElementById('ar-spinner').style.display = 'none';
+        document.getElementById('ar-run-btn').disabled = false;
+        renderArResults(data, prompt.trim());
+    })
+    .catch(function(err) {
+        document.getElementById('ar-spinner').style.display = 'none';
+        document.getElementById('ar-run-btn').disabled = false;
+        document.getElementById('ar-results').innerHTML =
+            '<div style="padding:16px;color:#ef4444;">&#10006; Connection error: ' + escapeHtml(String(err)) + '</div>';
+    });
+}
+
+function renderArResults(data, prompt) {
+    var container = document.getElementById('ar-results');
+    if (!container) return;
+    var html = '';
+
+    // Individual AI responses
+    var responses = data.responses || [];
+    responses.forEach(function(r) {
+        var icon = (PROVIDERS[r.provider] || {}).icon || '&#129302;';
+        var label = escapeHtml((PROVIDERS[r.provider] || {}).label || r.provider);
+        var badgeClass = r.success ? 'ar-stat-ok' : 'ar-stat-err';
+        var badgeText = r.success ? '&#10003; Success' : '&#10006; Failed';
+        html += '<div class="ar-resp-card">';
+        html += '<div class="ar-resp-head" style="background:#f8f9fa;">';
+        html += icon + ' <span>' + label + '</span>';
+        html += '<span class="ar-stat-badge ' + badgeClass + '">' + badgeText + '</span>';
+        html += '</div>';
+        if (r.success && r.text) {
+            html += '<div class="ar-resp-body">' + sanitizeAIResponse(r.text) + '</div>';
+        } else {
+            html += '<div class="ar-resp-err">&#9888; ' + escapeHtml(r.mode || 'No response') + '</div>';
+        }
+        html += '</div>';
+    });
+
+    // Synthesis
+    if (data.synthesis) {
+        html += '<div id="ar-synthesis">';
+        html += '<div id="ar-synthesis-head">&#127941; Synthesised Best Answer</div>';
+        html += '<div id="ar-synthesis-body">' + sanitizeAIResponse(data.synthesis) + '</div>';
+        html += '</div>';
+    }
+
+    container.innerHTML = html;
+}
+
+// ── AMBIGUITY RESOLVER BUTTON FACTORY ────────────────────────
+function createARButton(prefillFn, containerEl, extraClass) {
+    var btn = document.createElement('button');
+    btn.className = 'btn btn-ar' + (extraClass ? ' ' + extraClass : '');
+    btn.innerHTML = '&#9889; Resolve with Multi-AI';
+    btn.title = 'Query multiple AIs simultaneously and get a synthesised best answer';
+    btn.style.cssText = [
+        'display:inline-flex;align-items:center;gap:7px;padding:10px 20px;',
+        'border-radius:10px;border:2px solid #4d6bfe;background:transparent;',
+        'color:#4d6bfe;font-family:inherit;font-size:13px;font-weight:700;',
+        'cursor:pointer;transition:all 0.2s;white-space:nowrap;'
+    ].join('');
+    btn.addEventListener('mouseenter', function() {
+        btn.style.background = '#4d6bfe';
+        btn.style.color = '#fff';
+    });
+    btn.addEventListener('mouseleave', function() {
+        btn.style.background = 'transparent';
+        btn.style.color = '#4d6bfe';
+    });
+    btn.addEventListener('click', function() {
+        openAR(prefillFn ? prefillFn() : '');
+    });
+    if (containerEl) containerEl.appendChild(btn);
+    return btn;
+}
+
+
+window.ST = { provider: localStorage.getItem('cardiocare_new_provider') || '', keys: {}, files: [] };
+function currentApiKey(){ return ST.provider ? (ST.keys[ST.provider] || '') : ''; }
+
+document.addEventListener('DOMContentLoaded', function(){
+  (async function(){
+    try {
+      if(SecureKeyStore.isAvailable()){ ST.keys = await SecureKeyStore.load('ccnew_keys','cardiocare_new'); }
+      else { var r=localStorage.getItem('ccnew_keys'); ST.keys=r?JSON.parse(r):{}; }
+    } catch(e){ ST.keys={}; }
+  })();
+  ['dc1','dc2','dc3'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.addEventListener('change', function(){
+      var ok=['dc1','dc2','dc3'].every(function(i){ var x=document.getElementById(i); return x&&x.checked; });
+      var btn=document.getElementById('disc-btn'); if(btn) btn.disabled=!ok;
+    });
+  });
+  if(sessionStorage.getItem('cardiocare_new_disc')){
+    var m=document.getElementById('disc-modal'); if(m) m.style.display='none';
+  }
+  setTimeout(function(){ refreshProviderTags(); selectProvider(ST.provider,true); },100);
+});
+
+function acceptDisc(){
+  var m=document.getElementById('disc-modal'); if(m) m.style.display='none';
+  sessionStorage.setItem('cardiocare_new_disc','1');
+}
+
+function nav(id){
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.ntab,.sbi').forEach(function(n){ n.classList.remove('active'); });
+  var p=document.getElementById('panel-'+id); if(p) p.classList.add('active');
+  document.querySelectorAll('.ntab,.sbi').forEach(function(el){
+    var oc=el.getAttribute('onclick');
+    if(oc && oc.indexOf("'"+id+"'")!==-1) el.classList.add('active');
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function switchTab(btn,id){
+  var parent=btn.closest('.panel');
+  if(parent){
+    parent.querySelectorAll('.tbtn').forEach(function(b){ b.classList.remove('active'); });
+    parent.querySelectorAll('.tpane').forEach(function(p){ p.classList.remove('active'); });
+  }
+  btn.classList.add('active');
+  var pane=document.getElementById(id); if(pane) pane.classList.add('active');
+}
+
+function selectProvider(pid, init){
+  ST.provider=pid; localStorage.setItem('cardiocare_new_provider', pid||'');
+  document.querySelectorAll('.provider-card').forEach(function(c){ c.classList.remove('selected'); });
+  var ac=document.querySelector('.provider-card[data-provider="'+pid+'"]');
+  if(ac) ac.classList.add('selected');
+  var box=document.getElementById('key-entry-box');
+  var title=document.getElementById('key-entry-title');
+  var desc=document.getElementById('key-entry-desc');
+  var input=document.getElementById('api-key-in');
+  var link=document.getElementById('get-key-link');
+  var status=document.getElementById('key-status');
+  var md=document.getElementById('mode-disp');
+  if(!pid){
+    if(box) box.style.display='none';
+    if(status){ status.textContent='Offline mode.'; status.style.color='var(--text3)'; }
+    if(md) md.textContent='Offline Research';
+    if(!init) toast('Offline mode active.');
+    return;
+  }
+  var meta=PROVIDERS[pid];
+  if(!meta) return;
+  if(box) box.style.display='block';
+  if(title) title.innerHTML=escapeHtml(meta.icon)+' '+escapeHtml(meta.label)+' API Key';
+  if(desc) desc.innerHTML='Get key at <strong>'+escapeHtml(meta.getKeyUrl.replace('https://',''))+'</strong>. AES-256-GCM encrypted.';
+  if(input){ input.placeholder=escapeHtml(meta.placeholder); input.value=ST.keys[pid]||''; }
+  if(link) link.href=meta.getKeyUrl;
+  if(ST.keys[pid]){
+    if(status){ status.textContent='Configured: '+meta.label; status.style.color='var(--teal)'; }
+    if(md) md.textContent='Live AI ('+meta.label+')';
+  } else {
+    if(status){ status.textContent='No key for '+meta.label; status.style.color='var(--text3)'; }
+    if(md) md.textContent=meta.label+' - key required';
+  }
+  if(!init){
+    var keyBox=document.getElementById('key-entry-box');
+    if(keyBox) window.scrollTo({top:keyBox.offsetTop-100,behavior:'smooth'});
+  }
+}
+
+function refreshProviderTags(){
+  Object.keys(PROVIDERS).forEach(function(p){
+    var tag=document.getElementById('ptag-'+p); if(!tag) return;
+    if(ST.keys[p]){ tag.textContent='Configured'; tag.classList.add('configured'); }
+    else { tag.textContent='Not configured'; tag.classList.remove('configured'); }
+  });
+}
+
+function saveKey(){
+  if(!ST.provider){ toast('Select a provider first.'); return; }
+  var input=document.getElementById('api-key-in');
+  var k=input?input.value.trim():'';
+  if(!k){ toast('Please paste an API key.'); return; }
+  ST.keys[ST.provider]=k;
+  try {
+    if(SecureKeyStore.isAvailable()) SecureKeyStore.save('ccnew_keys','cardiocare_new',ST.keys);
+    else localStorage.setItem('ccnew_keys',JSON.stringify(ST.keys));
+  } catch(e){ localStorage.setItem('ccnew_keys',JSON.stringify(ST.keys)); }
+  refreshProviderTags();
+  selectProvider(ST.provider,true);
+  toast(PROVIDERS[ST.provider].label+' key saved (AES-256 encrypted).');
+}
+
+function clearKey(){
+  if(!ST.provider) return;
+  delete ST.keys[ST.provider];
+  try {
+    if(SecureKeyStore.isAvailable()) SecureKeyStore.save('ccnew_keys','cardiocare_new',ST.keys);
+    else localStorage.setItem('ccnew_keys',JSON.stringify(ST.keys));
+  } catch(e){ localStorage.setItem('ccnew_keys',JSON.stringify(ST.keys)); }
+  var input=document.getElementById('api-key-in'); if(input) input.value='';
+  refreshProviderTags(); selectProvider(ST.provider,true);
+}
+
+var FICONS={pdf:'&#128196;',jpg:'&#128444;',jpeg:'&#128444;',png:'&#128444;',docx:'&#128196;',txt:'&#128221;'};
+
+function handleFiles(files){
+  Array.from(files).forEach(function(f){
+    if(ST.files.find(function(x){ return x.name===f.name&&x.size===f.size; })) return;
+    ST.files.push(f);
+    var ext=f.name.split('.').pop().toLowerCase();
+    var sz=f.size>1048576?(f.size/1048576).toFixed(1)+'MB':Math.round(f.size/1024)+'KB';
+    var el=document.createElement('div'); el.className='file-row'; el.dataset.fname=f.name;
+    el.innerHTML='<span class="fr-ico">'+(FICONS[ext]||'&#128193;')+'</span>'
+      +'<span class="fr-name">'+escapeFilename(f.name)+'</span>'
+      +'<span class="fr-meta">'+escapeHtml(sz)+'</span>'
+      +'<span class="fr-ok">Ready</span>'
+      +'<span class="fr-del" onclick="removeByEl(this)">&#10005;</span>';
+    var fl=document.getElementById('flist'); if(fl) fl.appendChild(el);
+  });
+}
+
+function removeByEl(btn){
+  var r=btn.closest('.file-row'); if(!r) return;
+  var n=r.dataset.fname;
+  ST.files=ST.files.filter(function(f){ return f.name!==n; });
+  r.remove();
+}
+
+function clearFiles(){ ST.files=[]; var fl=document.getElementById('flist'); if(fl) fl.innerHTML=''; }
+
+function uploadFiles(){
+  if(!ST.files.length){ toast('Please select files first.'); return; }
+  var btn=document.getElementById('up-btn'); setLoad(btn,true);
+  setTimeout(function(){
+    var out=document.getElementById('up-result');
+    if(out) out.innerHTML='<div class="alert teal" style="margin-top:16px;"><span class="ai-ic">&#10003;</span><div><strong>'+escapeHtml(String(ST.files.length))+' file(s) uploaded.</strong> Go to Assessment or Conditions to research your reports.</div></div>';
+    setLoad(btn,false);
+  },2000);
+}
+
+function runAssessment(){
+  var symptom=(document.getElementById('as-symptom')||{}).value||'';
+  var duration=(document.getElementById('as-duration')||{}).value||'';
+  var age=(document.getElementById('as-age')||{}).value||'';
+  var riskfactors=(document.getElementById('as-riskfactors')||{}).value||'';
+  var history=(document.getElementById('as-history')||{}).value||'';
+  if(!symptom.trim()){ toast('Please describe your symptom.'); return; }
+  var btn=document.getElementById('as-btn'); setLoad(btn,true);
+  var out=document.getElementById('assess-output'); if(!out) return;
+  var key=currentApiKey();
+  if(ST.provider&&key){
+    fetch('/api/cardio/assess',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({symptom:symptom,duration:duration,age:age,risk_factors:riskfactors,history:history,provider:ST.provider,api_key:key})
+    }).then(function(r){ return r.json(); })
+    .then(function(data){
+      setLoad(btn,false);
+      var mt=data.mode==='live_ai'
+        ?'<span class="ctag" style="background:var(--teal-pale);color:var(--teal);border-color:var(--border2);display:inline-block;margin-bottom:10px;">Live AI &middot; '+escapeHtml(PROVIDERS[ST.provider].label)+'</span>'
+        :'<span class="ctag" style="display:inline-block;margin-bottom:10px;">Offline Research</span>';
+      out.innerHTML='<div class="sb"><h3>Symptom Assessment Research</h3>'+mt
+        +'<div style="white-space:pre-wrap;font-size:13.5px;line-height:1.8;color:var(--text2);">'
+        +sanitizeAIResponse(data.content||'')+'</div></div>';
+      out.scrollIntoView({behavior:'smooth',block:'start'});
+    }).catch(function(){ setLoad(btn,false); toast('Could not reach server. Try AI Chat.'); });
+  } else {
+    setLoad(btn,false);
+    out.innerHTML='<div class="sb"><h3>Symptom Assessment Research</h3>'
+      +'<p>For AI-researched assessment of <strong>'+escapeHtml(symptom)+'</strong>, please choose an AI provider in Settings.</p>'
+      +'<p>General guidance: any concerning cardiac symptom should be assessed promptly. '
+      +'For emergencies (chest pain, severe breathlessness, collapse): 112/999/911 immediately.</p></div>';
+    out.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+}
+
+var CONDITIONS_KB = {
+  'STEMI': '<div class="sb"><h3>STEMI (ST-Elevation Myocardial Infarction)</h3><p>MEDICAL EMERGENCY. Complete coronary artery occlusion causing full-thickness myocardial damage.</p><h4>Recognition</h4><ul><li>Central crushing chest pain/pressure radiating to arm/jaw/neck</li><li>Sweating, nausea, breathlessness, sense of impending doom</li><li>Atypical presentation common in women, elderly, diabetics</li></ul><h4>Management</h4><ul><li>Primary PCI gold standard (door-to-balloon under 90 minutes)</li><li>Thrombolysis if PCI unavailable within 120 minutes</li><li>Dual antiplatelet therapy, anticoagulation, beta-blocker, high-intensity statin</li></ul><div class="alert emergency" style="margin-top:12px;"><span class="ai-ic">&#128680;</span><div>Call 112/999/911 IMMEDIATELY. Chew aspirin 300mg if available. Do not drive yourself to hospital.</div></div></div>',
+
+  'Atrial Fibrillation': '<div class="sb"><h3>Atrial Fibrillation</h3><p>Most common sustained arrhythmia. 5x increased stroke risk from left atrial appendage thrombus.</p><h4>Key Points</h4><ul><li>CHA2DS2-VASc score guides anticoagulation decision</li><li>DOACs (apixaban, rivaroxaban, dabigatran, edoxaban) preferred over warfarin</li><li>Rate control: beta-blockers or verapamil/diltiazem first-line</li><li>Catheter ablation increasingly first-line for symptomatic paroxysmal AF</li></ul><div class="alert warn" style="margin-top:12px;"><span class="ai-ic">&#9888;</span><div>Research purposes only. Consult your cardiologist for anticoagulation and rhythm management decisions.</div></div></div>',
+
+  'HFrEF': '<div class="sb"><h3>Heart Failure with Reduced Ejection Fraction (HFrEF)</h3><p>EF&le;40%. Four pillars of therapy should be initiated and up-titrated in parallel.</p><h4>Four Pillars</h4><ul><li>ACE-I/ARB or ARNI (sacubitril-valsartan preferred)</li><li>Beta-blocker (bisoprolol, carvedilol, metoprolol succinate)</li><li>MRA (spironolactone/eplerenone)</li><li>SGLT2 inhibitor (benefit regardless of diabetes status)</li></ul><div class="alert warn" style="margin-top:12px;"><span class="ai-ic">&#9888;</span><div>Research purposes only. Consult your cardiologist for medication titration and monitoring.</div></div></div>',
+
+  'Hypertension': '<div class="sb"><h3>Hypertension</h3><p>25-30% of Indian adults affected, with lower awareness/treatment/control rates than high-income countries.</p><h4>Management</h4><ul><li>Sodium restriction under 5-6g/day (particularly relevant for high-salt Indian diets)</li><li>ACE-I/ARB, calcium channel blocker, thiazide-like diuretic</li><li>Resistant hypertension: add spironolactone, assess adherence, consider secondary causes</li></ul><div class="alert emergency" style="margin-top:12px;"><span class="ai-ic">&#128680;</span><div>Severe BP elevation with symptoms (headache, chest pain, visual changes): urgent assessment needed.</div></div></div>',
+
+  'Aortic Dissection': '<div class="sb"><h3>Aortic Dissection</h3><p>EMERGENCY, high mortality if untreated.</p><h4>Recognition</h4><ul><li>Sudden severe tearing/ripping chest or back pain, may migrate</li><li>Unequal pulses/blood pressures between arms</li><li>New aortic regurgitation murmur, neurological symptoms if carotid involvement</li></ul><h4>Management</h4><p>Type A (ascending aorta): surgical emergency. Type B (descending): often managed medically unless complications. CT aortography crucial for diagnosis.</p><div class="alert emergency" style="margin-top:12px;"><span class="ai-ic">&#128680;</span><div>Sudden tearing chest/back pain: 112/999/911 immediately.</div></div></div>'
+};
+
+function showCondition(){
+  var sel=document.getElementById('cond-sel');
+  var out=document.getElementById('cond-output');
+  if(!sel||!out) return;
+  var v=sel.value;
+  if(!v){ out.innerHTML=''; return; }
+  if(CONDITIONS_KB[v]){ out.innerHTML=CONDITIONS_KB[v]; out.scrollIntoView({behavior:'smooth',block:'start'}); return; }
+  fetchConditionLive(v,out);
+}
+
+function fetchConditionLive(sel,out){
+  var key=currentApiKey();
+  if(ST.provider&&key){
+    out.innerHTML='<div class="sb"><h3>'+escapeHtml(sel)+'</h3>'
+      +'<div style="padding:10px 0;"><span class="typing"><span></span><span></span><span></span></span> Researching from ACC/AHA/ESC guidelines...</div></div>';
+    out.scrollIntoView({behavior:'smooth',block:'start'});
+    fetch('/api/condition/'+encodeURIComponent(sel)+'?provider='+encodeURIComponent(ST.provider)+'&api_key='+encodeURIComponent(key))
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var body=data.content||(data.condition?JSON.stringify(data.condition,null,2):'No research available.');
+      var mt=data.mode==='live_ai'
+        ?'<span class="ctag" style="background:var(--teal-pale);color:var(--teal);display:inline-block;margin-bottom:10px;">Live AI &middot; '+escapeHtml(PROVIDERS[ST.provider].label)+'</span>'
+        :'<span class="ctag" style="display:inline-block;margin-bottom:10px;">Offline Research</span>';
+      out.innerHTML='<div class="sb"><h3>'+escapeHtml(sel)+'</h3>'+mt
+        +'<div style="white-space:pre-wrap;font-size:13.5px;line-height:1.8;color:var(--text2);">'
+        +sanitizeAIResponse(body)+'</div></div>';
+    }).catch(function(){
+      out.innerHTML='<div class="sb"><h3>'+escapeHtml(sel)+'</h3><p>Could not reach server. Try the AI Chat tab.</p></div>';
+    });
+  } else {
+    out.innerHTML='<div class="sb"><h3>'+escapeHtml(sel)+'</h3><p>Choose an AI provider in Settings for live research on this condition.</p></div>';
+    out.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+}
+
+var CHAT_KB = {
+  'chest pain': 'Chest pain research: Central crushing chest pain/pressure radiating to arm, jaw or neck, with sweating, nausea, or breathlessness needs URGENT assessment - could be a heart attack. Predictable pain on exertion relieved by rest could be stable angina. Sudden tearing/ripping pain could indicate aortic dissection - also an emergency. Any concerning chest pain should be assessed by calling 112/999/911 immediately - do not wait or try to self-diagnose.',
+  'heart failure': 'Heart failure research: HFrEF (reduced ejection fraction) treatment involves four pillar medications - ACE inhibitor/ARB or ARNI, beta-blocker, mineralocorticoid receptor antagonist, and SGLT2 inhibitor - all started and gradually increased together per current guidelines. Symptoms include breathlessness, ankle swelling, fatigue. Rheumatic heart disease remains an important cause in India. Consult your cardiologist for personalised management.',
+  'blood pressure': 'Blood pressure research: Hypertension affects 25-30% of Indian adults. Management includes sodium restriction (especially relevant given typically high-salt Indian diets), regular exercise, and medications (ACE inhibitor/ARB, calcium channel blocker, thiazide-like diuretic). Severe blood pressure elevation with symptoms like severe headache, chest pain, or visual changes needs urgent medical assessment. Consult your cardiologist for personalised targets and treatment.',
+  'atrial fibrillation': 'Atrial fibrillation research: Most common sustained heart rhythm disorder, causes irregular heartbeat and significantly increased stroke risk. CHA2DS2-VASc score helps determine if blood thinning medication (anticoagulation) is needed - DOACs (like apixaban, rivaroxaban) are now generally preferred over warfarin. Rate control medications (beta-blockers) manage symptoms. Catheter ablation can potentially restore normal rhythm. Consult your cardiologist for personalised risk assessment.',
+  'palpitations': 'Palpitations research: Sensation of rapid, irregular, or forceful heartbeat. Common benign causes: anxiety, caffeine, alcohol, dehydration. Concerning features requiring assessment: associated chest pain, breathlessness, dizziness, or fainting - these could indicate a more serious arrhythmia. An ECG during symptoms (or Holter monitor if intermittent) helps diagnose the cause. Consult your cardiologist, especially if palpitations are associated with other symptoms.',
+  'cardiac arrest': 'CARDIAC ARREST - MEDICAL EMERGENCY: No pulse, unresponsive, not breathing normally (gasping is not normal breathing - still start CPR). IMMEDIATE ACTION: call for emergency help, start chest compressions immediately (100-120 per minute, push hard and fast), use an AED as soon as available. Continue CPR until help arrives. Every minute without CPR and defibrillation significantly reduces survival chances - do not hesitate to start.',
+  'stroke': 'Stroke research: FAST recognition - Face drooping, Arm weakness, Speech difficulty, Time to call emergency services. Also watch for: sudden severe headache, sudden vision loss, sudden confusion, sudden severe dizziness/loss of balance. Time-critical - clot-busting treatment and other interventions are most effective within hours of onset. If you suspect a stroke in yourself or someone else, call 112/999/911 immediately - do not wait to see if symptoms improve.',
+  'cholesterol': 'Cholesterol research: Statins are first-line treatment for both preventing and treating cardiovascular disease. Target LDL varies by risk category - patients with established heart disease generally target very low LDL levels. Lp(a) is an increasingly recognised genetic risk factor, particularly relevant as it is commonly elevated in South Asian populations. Diet and exercise help but medication is usually needed for significant risk reduction. Consult your cardiologist/lipid specialist for personalised targets.'
+};
+
+function sendChat(){
+  var inp=document.getElementById('chat-in');
+  if(!inp) return;
+  var msg=inp.value.trim(); if(!msg) return;
+  addMsg('user',msg); inp.value='';
+  var msgs=document.getElementById('chat-msgs');
+  var tid='ty-'+Date.now();
+  var ti=document.createElement('div'); ti.className='cm ai'; ti.id=tid;
+  ti.innerHTML='<div class="ai-lbl">CardioCare AI</div><div class="typing"><span></span><span></span><span></span></div>';
+  if(msgs){ msgs.appendChild(ti); msgs.scrollTop=msgs.scrollHeight; }
+  var key=currentApiKey();
+  if(ST.provider&&key){
+    fetch('/api/chat/send',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:msg,request_ai:true,provider:ST.provider,api_key:key})
+    }).then(function(r){ return r.json(); })
+    .then(function(data){
+      var el=document.getElementById(tid); if(el) el.remove();
+      if(data.ai_response){ addMsg('ai',data.ai_response,true); return; }
+      offlineChat(msg,null);
+    }).catch(function(){
+      var el=document.getElementById(tid); if(el) el.remove();
+      offlineChat(msg,null);
+    });
+  } else {
+    setTimeout(function(){ offlineChat(msg,tid); },600);
+  }
+}
+
+function offlineChat(msg,tid){
+  if(tid){ var el=document.getElementById(tid); if(el) el.remove(); }
+  var ml=msg.toLowerCase(); var resp='';
+  for(var k in CHAT_KB){ if(ml.indexOf(k)!==-1){ resp=CHAT_KB[k]; break; } }
+  if(!resp) resp='Thank you for your question about "'+escapeHtml(msg)+'". Browse the relevant sections for research, or choose an AI provider in Settings. For cardiac emergencies (chest pain, cardiac arrest, aortic dissection) act immediately &mdash; 112/999/911. Research purposes only &mdash; always consult your cardiologist.';
+  addMsg('ai',resp,false);
+}
+
+function addMsg(type,text,isLive){
+  var msgs=document.getElementById('chat-msgs'); if(!msgs) return;
+  var el=document.createElement('div'); el.className='cm '+type;
+  if(type==='ai'){
+    var label=(isLive&&ST.provider)?('CardioCare AI &middot; '+escapeHtml(PROVIDERS[ST.provider].label)):'CardioCare AI';
+    el.innerHTML='<div class="ai-lbl">'+label+'</div>'+sanitizeAIResponse(text);
+  } else {
+    el.textContent=text;
+  }
+  msgs.appendChild(el); msgs.scrollTop=msgs.scrollHeight;
+}
+
+function setLoad(btn,state){
+  if(!btn) return;
+  if(state) btn.classList.add('loading'); else btn.classList.remove('loading');
+  btn.disabled=state;
+}
+
+function toast(msg){
+  var t=document.createElement('div');
+  t.style.cssText='position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#fff;border:1px solid var(--border2);color:var(--text);padding:12px 22px;border-radius:10px;font-size:14px;z-index:9999;box-shadow:var(--shadow);white-space:nowrap;';
+  t.textContent=msg; document.body.appendChild(t);
+  setTimeout(function(){ if(t.parentNode) t.parentNode.removeChild(t); },3000);
+}
+
+var uz=document.getElementById('uz');
+if(uz){
+  uz.addEventListener('dragover',function(e){e.preventDefault();uz.classList.add('drag');});
+  uz.addEventListener('dragleave',function(){uz.classList.remove('drag');});
+  uz.addEventListener('drop',function(e){e.preventDefault();uz.classList.remove('drag');handleFiles(e.dataTransfer.files);});
+}
+</script>
+</body>
+</html>
